@@ -7,13 +7,8 @@ function isLocalEnvironment() {
   return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 }
 
-// Тихий fetch без вывода ошибок в консоль
+// Тихий fetch с переключением на прямой API в продакшене
 async function fetchWithSilentFallback(url) {
-  // В продакшене пропускаем fetch и сразу возвращаем моки
-  if (!isLocalEnvironment()) {
-    throw new Error('Using mock data in production');
-  }
-  
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -78,13 +73,23 @@ export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 5
       if (!symbol) return [];
       
       try {
-        const proxyBase = spot 
-          ? "http://localhost:3001/api/spot" 
-          : "http://localhost:3001/api/futures";
+        // Определяем URL в зависимости от среды
+        let url;
+        if (isLocalEnvironment()) {
+          // Локально используем прокси-сервер
+          const proxyBase = spot 
+            ? "http://localhost:3001/api/spot" 
+            : "http://localhost:3001/api/futures";
+          url = `${proxyBase}/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
+        } else {
+          // На сервере прямой запрос к Binance API
+          const apiBase = spot 
+            ? "https://api.binance.com/api/v3" 
+            : "https://fapi.binance.com/fapi/v1";
+          url = `${apiBase}/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
+        }
         
-        const url = `${proxyBase}/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-        
-        // Используем обёртку fetch с подавлением ошибок сети
+        // Используем обёртку fetch
         const response = await fetchWithSilentFallback(url);
         
         const rawData = await response.json();
