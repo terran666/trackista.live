@@ -2,8 +2,18 @@ import { useQuery } from '@tanstack/react-query';
 import binanceService from '../services/binanceService';
 import binanceFuturesService from '../services/binanceFuturesService';
 
+// Детекция среды - если localhost, то пробуем API, иначе сразу мок данные
+function isLocalEnvironment() {
+  return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+}
+
 // Тихий fetch без вывода ошибок в консоль
 async function fetchWithSilentFallback(url) {
+  // В продакшене пропускаем fetch и сразу возвращаем моки
+  if (!isLocalEnvironment()) {
+    throw new Error('Using mock data in production');
+  }
+  
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -11,7 +21,6 @@ async function fetchWithSilentFallback(url) {
     }
     return response;
   } catch (error) {
-    // Вместо выброса ошибки возвращаем null
     throw new Error('Connection failed');
   }
 }
