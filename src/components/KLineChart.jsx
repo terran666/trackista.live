@@ -270,8 +270,8 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
       // Устанавливаем количество видимых баров в зависимости от размера экрана
       if (chart.current) {
         const visibleRange = isMobile ? 
-          { from: 0.7, to: 1.0 } : // На мобильных показываем 30% данных (меньше баров, больше размер)
-          { from: 0.6, to: 1.0 };  // На десктопе показываем 40% данных (оптимальный размер баров)
+          { from: 0.5, to: 1.0 } : // На мобильных показываем 50% данных (+30% баров)
+          { from: 0.4, to: 1.0 };  // На десктопе показываем 60% данных (+30% баров)
         
         setTimeout(() => {
           try {
@@ -325,8 +325,8 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
         if (chart.current) {
           const isMobile = window.innerWidth <= 768;
           const visibleRange = isMobile ? 
-            { from: 0.7, to: 1.0 } : // На мобильных меньше баров для лучшей читаемости
-            { from: 0.6, to: 1.0 };  // На десктопе оптимальное количество баров
+            { from: 0.5, to: 1.0 } : // На мобильных 50% данных (+30% баров)
+            { from: 0.4, to: 1.0 };  // На десктопе 60% данных (+30% баров)
           
           setTimeout(() => {
             try {
