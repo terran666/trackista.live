@@ -122,24 +122,30 @@ function generateTestKlinesData() {
   for (let i = 0; i < 300; i++) { // 300 свечей для лучшего графика
     const timestamp = baseTime + i * 60 * 1000; // Интервал 1 минута
     
-    // Более реалистичные изменения цены
-    const volatility = 0.002; // 0.2% волатильность
-    const trend = Math.sin(i / 50) * 0.001; // Небольшой тренд
-    const change = (Math.random() - 0.5) * volatility + trend;
+    // Увеличиваем волатильность для видимых баров
+    const volatility = 0.008; // 0.8% волатильность (увеличено в 4 раза)
+    const trend = Math.sin(i / 30) * 0.003; // Более выраженный тренд
+    const randomChange = (Math.random() - 0.5) * volatility;
+    const change = randomChange + trend;
     
     const open = price;
     const close = price * (1 + change);
-    const high = Math.max(open, close) * (1 + Math.random() * 0.001);
-    const low = Math.min(open, close) * (1 - Math.random() * 0.001);
-    const volume = Math.random() * 50 + 10; // От 10 до 60
+    
+    // Увеличиваем диапазон high/low для более выраженных свечей
+    const highMultiplier = 1 + Math.random() * 0.006; // до 0.6%
+    const lowMultiplier = 1 - Math.random() * 0.006; // до 0.6%
+    
+    const high = Math.max(open, close) * highMultiplier;
+    const low = Math.min(open, close) * lowMultiplier;
+    const volume = Math.random() * 100 + 20; // От 20 до 120
     
     testData.push({
       timestamp,
-      open: Math.round(open * 100) / 100,
-      high: Math.round(high * 100) / 100,
-      low: Math.round(low * 100) / 100,
-      close: Math.round(close * 100) / 100,
-      volume: Math.round(volume * 100) / 100
+      open: parseFloat(open.toFixed(2)),
+      high: parseFloat(high.toFixed(2)),
+      low: parseFloat(low.toFixed(2)),
+      close: parseFloat(close.toFixed(2)),
+      volume: parseFloat(volume.toFixed(2))
     });
     
     price = close;
