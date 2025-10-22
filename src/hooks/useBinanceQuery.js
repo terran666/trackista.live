@@ -7,8 +7,15 @@ function isLocalEnvironment() {
   return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 }
 
+// Список CORS прокси для fallback
+const CORS_PROXIES = [
+  'https://proxy.cors.sh/',
+  'https://cors-anywhere.herokuapp.com/',
+  'https://api.allorigins.win/get?url='
+];
+
 // Тихий fetch с переключением на прямой API в продакшене
-async function fetchWithSilentFallback(url) {
+async function fetchWithSilentFallback(url, isProduction = false, binanceUrl = '') {
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -16,7 +23,27 @@ async function fetchWithSilentFallback(url) {
     }
     return response;
   } catch (error) {
-    throw new Error('Connection failed');
+    // В продакшене пробуем альтернативные прокси
+    if (isProduction && binanceUrl) {
+      for (let proxy of CORS_PROXIES) {
+        try {
+          let proxyUrl;
+          if (proxy.includes('allorigins')) {
+            proxyUrl = `${proxy}${encodeURIComponent(binanceUrl)}`;
+          } else {
+            proxyUrl = `${proxy}${binanceUrl}`;
+          }
+          
+          const fallbackResponse = await fetch(proxyUrl);
+          if (fallbackResponse.ok) {
+            return fallbackResponse;
+          }
+        } catch (e) {
+          continue; // Пробуем следующий прокси
+        }
+      }
+    }
+    throw new Error('All proxies failed');
   }
 }
 
@@ -82,25 +109,38 @@ export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 1
             : "http://localhost:3001/api/futures";
           url = `${proxyBase}/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
         } else {
-          // На сервере пробуем несколько CORS прокси
+          // На сервере пробуем другой CORS прокси
           const binanceUrl = spot 
             ? `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`
             : `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
           
-          // Попробуем corsproxy.io - более стабильный
-          url = `https://corsproxy.io/?${encodeURIComponent(binanceUrl)}`;
+          // Попробуем proxy.cors.sh - бесплатный и надежный
+          url = `https://proxy.cors.sh/${binanceUrl}`;
         }
         
-        // Используем обёртку fetch
-        const response = await fetchWithSilentFallback(url);
+        // Используем обёртку fetch с fallback для продакшена
+        const binanceUrl = !isLocalEnvironment() ? (spot 
+          ? `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`
+          : `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`) : '';
+        
+        const response = await fetchWithSilentFallback(url, !isLocalEnvironment(), binanceUrl);
         
         let rawData;
         if (isLocalEnvironment()) {
           // Локально данные приходят напрямую
           rawData = await response.json();
         } else {
-          // cors-anywhere возвращает данные напрямую (как и локальный прокси)
-          rawData = await response.json();
+          // Проверяем тип ответа (некоторые прокси оборачивают в объект)
+          const responseData = await response.json();
+          if (responseData.contents) {
+            // allorigins формат
+            rawData = JSON.parse(responseData.contents);
+          } else if (Array.isArray(responseData)) {
+            // Прямой формат
+            rawData = responseData;
+          } else {
+            throw new Error('Unexpected response format');
+          }
         }
         
         // Проверяем что данные корректные (массив массивов)
