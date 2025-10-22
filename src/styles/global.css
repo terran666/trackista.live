@@ -189,13 +189,15 @@ html {
   }
   
   .chart-main {
-    height: 50vh !important;
-    min-height: 400px;
+    height: 60vh !important;
+    min-height: 450px;
+    max-height: 70vh;
   }
   
   .chart-sidebar {
     height: auto !important;
-    max-height: 50vh;
+    max-height: 40vh;
+    min-height: 300px;
     overflow-y: auto;
   }
   
@@ -203,6 +205,20 @@ html {
   .row.h-100 {
     height: auto !important;
     flex-direction: column;
+  }
+}
+
+/* Дополнительные стили для очень маленьких экранов */
+@media (max-width: 576px) {
+  .chart-main {
+    height: 55vh !important;
+    min-height: 400px;
+    max-height: 65vh;
+  }
+  
+  .chart-sidebar {
+    max-height: 35vh;
+    min-height: 250px;
   }
 }
 

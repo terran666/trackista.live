@@ -23,7 +23,7 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
     symbol || 'BTCUSDT', 
     interval, 
     spot, 
-    compact ? (limit || 100) : 500
+    compact ? (limit || 100) : 1000
   );
 
   // Функция для прокрутки к последнему бару
@@ -109,27 +109,21 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
       // Определяем, мобильное ли устройство
       const isMobile = window.innerWidth <= 768;
       
-      // Настройки для мобильных устройств
-      const mobileOptions = {
+      // Настройки графика с полностью отключенной сеткой
+      const chartOptions = {
         grid: {
-          show: true,
+          show: false,
           horizontal: {
-            show: true,
-            size: 1,
-            color: '#f0f0f0',
-            style: 'solid'
+            show: false
           },
           vertical: {
-            show: true,
-            size: 1,
-            color: '#f0f0f0',
-            style: 'solid'
+            show: false
           }
         },
         candle: {
           margin: {
-            top: 0.2,
-            bottom: 0.1
+            top: 0.1,
+            bottom: 0.05
           },
           type: 'candle_solid',
           bar: {
@@ -172,8 +166,8 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
         },
         technicalIndicator: {
           margin: {
-            top: 0.2,
-            bottom: 0.1
+            top: 0.1,
+            bottom: 0.05
           },
           bar: {
             upColor: '#26a69a',
@@ -203,12 +197,12 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
             color: '#D9D9D9',
             family: 'Helvetica Neue',
             weight: 'normal',
-            size: isMobile ? 10 : 12, // Уменьшаем размер текста на мобильных
-            paddingTop: 3,
-            paddingBottom: 6
+            size: isMobile ? 9 : 11, // Еще меньше текст для больших баров
+            paddingTop: 2,
+            paddingBottom: 4
           },
           tickLine: {
-            show: true,
+            show: false, // Отключаем линии на оси X
             size: 1,
             length: 3,
             color: '#888888'
@@ -231,26 +225,53 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
             color: '#D9D9D9',
             family: 'Helvetica Neue',
             weight: 'normal',
-            size: isMobile ? 10 : 12, // Уменьшаем размер текста на мобильных
-            paddingLeft: 3,
-            paddingRight: 6
+            size: isMobile ? 9 : 11, // Еще меньше текст для больших баров
+            paddingLeft: 2,
+            paddingRight: 4
           },
           tickLine: {
-            show: true,
+            show: false, // Отключаем линии на оси Y
             size: 1,
             length: 3,
             color: '#888888'
           }
+        },
+        crosshair: {
+          show: false, // Полностью отключаем перекрестие
+          horizontal: {
+            show: false,
+            line: { show: false }
+          },
+          vertical: {
+            show: false,
+            line: { show: false }
+          }
         }
       };
       
-      chart.current = init(chartRef.current, mobileOptions);
+      chart.current = init(chartRef.current, chartOptions);
+      
+      // Принудительно отключаем сетку после инициализации
+      if (chart.current && chart.current.setStyles) {
+        chart.current.setStyles({
+          grid: {
+            show: false,
+            horizontal: { show: false },
+            vertical: { show: false }
+          },
+          crosshair: {
+            show: false,
+            horizontal: { show: false, line: { show: false } },
+            vertical: { show: false, line: { show: false } }
+          }
+        });
+      }
       
       // Устанавливаем количество видимых баров в зависимости от размера экрана
       if (chart.current) {
         const visibleRange = isMobile ? 
-          { from: 0.8, to: 1.0 } : // На мобильных показываем 20% данных (больше баров)
-          { from: 0.7, to: 1.0 };  // На десктопе показываем 30% данных
+          { from: 0.6, to: 1.0 } : // На мобильных показываем 40% данных (больше баров)
+          { from: 0.5, to: 1.0 };  // На десктопе показываем 50% данных (больше баров)
         
         setTimeout(() => {
           try {
@@ -293,13 +314,23 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
         if (chart.current) {
           const isMobile = window.innerWidth <= 768;
           const visibleRange = isMobile ? 
-            { from: 0.8, to: 1.0 } : // На мобильных показываем больше баров
-            { from: 0.7, to: 1.0 };  // На десктопе стандартный диапазон
+            { from: 0.6, to: 1.0 } : // На мобильных показываем больше баров (40% данных)
+            { from: 0.5, to: 1.0 };  // На десктопе больше баров (50% данных)
           
           setTimeout(() => {
             try {
               chart.current.setVisibleRange(visibleRange);
               chart.current.resize();
+              
+              // Принудительно обновляем размеры для мобильных
+              if (isMobile && chartRef.current) {
+                const rect = chartRef.current.getBoundingClientRect();
+                if (rect.height < 300) {
+                  chartRef.current.style.height = '350px';
+                  chart.current.resize();
+                }
+              }
+              
               console.log(`📱 График адаптирован для ${isMobile ? 'мобильного' : 'десктопного'} экрана`);
             } catch (e) {
               console.log('Ошибка адаптации графика');
@@ -481,10 +512,13 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
           className="flex-grow-1"
           style={{ 
             width: '100%', 
-            minHeight: 0,
+            minHeight: window.innerWidth <= 768 ? '350px' : 0,
+            height: window.innerWidth <= 768 ? 'auto' : '100%',
             backgroundColor: '#fff',
             border: '1px solid #dee2e6',
-            borderRadius: '8px'
+            borderRadius: '8px',
+            display: 'block',
+            overflow: 'hidden'
           }}
         />
         
