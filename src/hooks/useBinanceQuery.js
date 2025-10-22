@@ -121,10 +121,11 @@ export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 5
           volume: parseFloat(item[5])
         }));
         
+        console.log('✅ Загружены реальные данные Binance API');
         return formattedData;
       } catch (error) {
-        // Полностью тихая обработка - никаких логов
-        console.log('✅ Загружено 300 свечей через TanStack Query');
+        // Fallback на тестовые данные
+        console.log('⚠️ Используются тестовые данные (API недоступен)');
         return generateTestKlinesData();
       }
     },
@@ -144,22 +145,25 @@ function generateTestKlinesData() {
   for (let i = 0; i < 300; i++) { // 300 свечей для лучшего графика
     const timestamp = baseTime + i * 60 * 1000; // Интервал 1 минута
     
-    // Уменьшаем волнообразность, делаем более случайные свечи
-    const volatility = 0.005; // 0.5% волатильность 
-    const microTrend = (Math.random() - 0.5) * 0.001; // Микротренд
+    // Полностью случайные изменения без паттернов
+    const volatility = 0.004; // 0.4% волатильность 
     const randomChange = (Math.random() - 0.5) * volatility;
-    const change = randomChange + microTrend;
+    
+    // Иногда делаем большие скачки (как в реальности)
+    const bigMove = Math.random() < 0.05 ? (Math.random() - 0.5) * 0.01 : 0;
+    
+    const change = randomChange + bigMove;
     
     const open = price;
     const close = price * (1 + change);
     
-    // Реалистичные high/low для свечей
-    const spread = Math.abs(close - open);
-    const extraRange = spread * 0.3 + price * 0.002; // Дополнительный диапазон
+    // Случайные high/low без привязки к тренду
+    const highOffset = Math.random() * price * 0.003;
+    const lowOffset = Math.random() * price * 0.003;
     
-    const high = Math.max(open, close) + Math.random() * extraRange;
-    const low = Math.min(open, close) - Math.random() * extraRange;
-    const volume = Math.random() * 80 + 30; // От 30 до 110
+    const high = Math.max(open, close) + highOffset;
+    const low = Math.min(open, close) - lowOffset;
+    const volume = Math.random() * 100 + 20; // От 20 до 120
     
     testData.push({
       timestamp,
