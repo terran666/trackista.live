@@ -99,7 +99,16 @@ export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 5
         } else {
           // С CORS прокси данные в поле contents
           const proxyResponse = await response.json();
-          rawData = JSON.parse(proxyResponse.contents);
+          if (proxyResponse.status && proxyResponse.status.http_code === 200) {
+            rawData = JSON.parse(proxyResponse.contents);
+          } else {
+            throw new Error('CORS proxy failed');
+          }
+        }
+        
+        // Проверяем что данные корректные (массив массивов)
+        if (!Array.isArray(rawData) || rawData.length === 0 || !Array.isArray(rawData[0])) {
+          throw new Error('Invalid data format');
         }
         
         // Преобразуем данные в формат KLineCharts
@@ -135,22 +144,22 @@ function generateTestKlinesData() {
   for (let i = 0; i < 300; i++) { // 300 свечей для лучшего графика
     const timestamp = baseTime + i * 60 * 1000; // Интервал 1 минута
     
-    // Увеличиваем волатильность для видимых баров
-    const volatility = 0.008; // 0.8% волатильность (увеличено в 4 раза)
-    const trend = Math.sin(i / 30) * 0.003; // Более выраженный тренд
+    // Уменьшаем волнообразность, делаем более случайные свечи
+    const volatility = 0.005; // 0.5% волатильность 
+    const microTrend = (Math.random() - 0.5) * 0.001; // Микротренд
     const randomChange = (Math.random() - 0.5) * volatility;
-    const change = randomChange + trend;
+    const change = randomChange + microTrend;
     
     const open = price;
     const close = price * (1 + change);
     
-    // Увеличиваем диапазон high/low для более выраженных свечей
-    const highMultiplier = 1 + Math.random() * 0.006; // до 0.6%
-    const lowMultiplier = 1 - Math.random() * 0.006; // до 0.6%
+    // Реалистичные high/low для свечей
+    const spread = Math.abs(close - open);
+    const extraRange = spread * 0.3 + price * 0.002; // Дополнительный диапазон
     
-    const high = Math.max(open, close) * highMultiplier;
-    const low = Math.min(open, close) * lowMultiplier;
-    const volume = Math.random() * 100 + 20; // От 20 до 120
+    const high = Math.max(open, close) + Math.random() * extraRange;
+    const low = Math.min(open, close) - Math.random() * extraRange;
+    const volume = Math.random() * 80 + 30; // От 30 до 110
     
     testData.push({
       timestamp,
