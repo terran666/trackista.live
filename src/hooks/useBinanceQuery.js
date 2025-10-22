@@ -91,48 +91,29 @@ export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 1
       if (!symbol) return [];
       
       try {
-        // Определяем URL в зависимости от среды
-        let url;
-        if (isLocalEnvironment()) {
-          // Локально используем прокси-сервер
-          const proxyBase = spot 
-            ? "http://localhost:3001/api/spot" 
-            : "http://localhost:3001/api/futures";
-          url = `${proxyBase}/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-        } else {
-          // На сервере используем прямое подключение к публичному API
-          const binanceUrl = spot 
-            ? `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`
-            : `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-          
-          // Сначала пробуем прямой запрос (иногда работает)
-          url = binanceUrl;
-        }
-        
-        // Используем обёртку fetch с fallback для продакшена
-        const binanceUrl = !isLocalEnvironment() ? (spot 
+        // Везде используем одинаковую логику - прямое API
+        const binanceUrl = spot 
           ? `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`
-          : `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`) : '';
+          : `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
         
-        const response = await fetchWithSilentFallback(url, !isLocalEnvironment(), binanceUrl);
+        // Сначала пробуем прямой запрос (работает везде одинаково)
+        const url = binanceUrl;
+        
+        // Используем обёртку fetch с fallback 
+        const response = await fetchWithSilentFallback(url, true, binanceUrl);
         
         let rawData;
         const responseData = await response.json();
         
-        if (isLocalEnvironment()) {
-          // Локально данные приходят напрямую
+        // Везде одинаковая обработка - может быть прямой формат или через allorigins
+        if (responseData.contents) {
+          // allorigins формат
+          rawData = JSON.parse(responseData.contents);
+        } else if (Array.isArray(responseData)) {
+          // Прямой формат от Binance
           rawData = responseData;
         } else {
-          // В продакшене может быть прямой формат или через allorigins
-          if (responseData.contents) {
-            // allorigins формат
-            rawData = JSON.parse(responseData.contents);
-          } else if (Array.isArray(responseData)) {
-            // Прямой формат от Binance
-            rawData = responseData;
-          } else {
-            throw new Error('Unexpected response format');
-          }
+          throw new Error('Unexpected response format');
         }
         
         // Проверяем что данные корректные (массив массивов)
