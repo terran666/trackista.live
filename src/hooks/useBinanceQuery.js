@@ -66,7 +66,7 @@ export function useBinanceCrypto(symbol) {
 }
 
 // Хук для получения свечных данных для графика
-export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 500) {
+export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 1000) {
   return useQuery({
     queryKey: ['binance-klines', symbol, interval, spot, limit],
     queryFn: async () => {
@@ -136,10 +136,10 @@ export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 5
 // Генерация тестовых данных для свечей
 function generateTestKlinesData() {
   const testData = [];
-  const baseTime = Date.now() - 5 * 60 * 60 * 1000; // 5 часов назад
+  const baseTime = Date.now() - 17 * 60 * 60 * 1000; // 17 часов назад для 1000 минутных свечей
   let price = 43250; // Реалистичная цена BTC
   
-  for (let i = 0; i < 300; i++) { // 300 свечей для лучшего графика
+  for (let i = 0; i < 1000; i++) { // 1000 свечей для полной истории
     const timestamp = baseTime + i * 60 * 1000; // Интервал 1 минута
     
     // Полностью случайные изменения без паттернов
