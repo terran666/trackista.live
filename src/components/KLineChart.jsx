@@ -276,13 +276,21 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
         setTimeout(() => {
           try {
             if (chart.current && typeof chart.current.setVisibleRange === 'function') {
-              chart.current.setVisibleRange(visibleRange);
-              console.log('✅ Видимый диапазон установлен:', visibleRange);
+              // Дополнительная проверка готовности графика
+              const canvasElement = chartRef.current?.querySelector('canvas');
+              if (canvasElement && canvasElement.width > 0) {
+                chart.current.setVisibleRange(visibleRange);
+                console.log('✅ Видимый диапазон установлен:', visibleRange);
+              } else {
+                console.log('⏳ График ещё не готов, пропускаем установку диапазона');
+              }
+            } else {
+              console.log('⚠️ Метод setVisibleRange недоступен');
             }
           } catch (e) {
-            console.log('⚠️ Не удалось установить видимый диапазон:', e.message);
+            console.log('⚠️ Ошибка установки видимого диапазона:', e.message);
           }
-        }, 200); // Увеличиваем задержку
+        }, 500); // Увеличиваем задержку для онлайн версии
       }
       
       console.log(`📊 График инициализирован для ${isMobile ? 'мобильного' : 'десктопного'} устройства`);
@@ -322,11 +330,15 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
           
           setTimeout(() => {
             try {
-              if (chart.current && typeof chart.current.setVisibleRange === 'function') {
-                chart.current.setVisibleRange(visibleRange);
-              }
               if (chart.current && typeof chart.current.resize === 'function') {
                 chart.current.resize();
+              }
+              
+              if (chart.current && typeof chart.current.setVisibleRange === 'function') {
+                const canvasElement = chartRef.current?.querySelector('canvas');
+                if (canvasElement && canvasElement.width > 0) {
+                  chart.current.setVisibleRange(visibleRange);
+                }
               }
               
               // Принудительно обновляем размеры для мобильных
