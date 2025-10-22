@@ -275,11 +275,14 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
         
         setTimeout(() => {
           try {
-            chart.current.setVisibleRange(visibleRange);
+            if (chart.current && typeof chart.current.setVisibleRange === 'function') {
+              chart.current.setVisibleRange(visibleRange);
+              console.log('✅ Видимый диапазон установлен:', visibleRange);
+            }
           } catch (e) {
-            console.log('Не удалось установить видимый диапазон');
+            console.log('⚠️ Не удалось установить видимый диапазон:', e.message);
           }
-        }, 100);
+        }, 200); // Увеличиваем задержку
       }
       
       console.log(`📊 График инициализирован для ${isMobile ? 'мобильного' : 'десктопного'} устройства`);
@@ -319,21 +322,27 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
           
           setTimeout(() => {
             try {
-              chart.current.setVisibleRange(visibleRange);
-              chart.current.resize();
+              if (chart.current && typeof chart.current.setVisibleRange === 'function') {
+                chart.current.setVisibleRange(visibleRange);
+              }
+              if (chart.current && typeof chart.current.resize === 'function') {
+                chart.current.resize();
+              }
               
               // Принудительно обновляем размеры для мобильных
               if (isMobile && chartRef.current) {
                 const rect = chartRef.current.getBoundingClientRect();
                 if (rect.height < 300) {
                   chartRef.current.style.height = '350px';
-                  chart.current.resize();
+                  if (chart.current && typeof chart.current.resize === 'function') {
+                    chart.current.resize();
+                  }
                 }
               }
               
               console.log(`📱 График адаптирован для ${isMobile ? 'мобильного' : 'десктопного'} экрана`);
             } catch (e) {
-              console.log('Ошибка адаптации графика');
+              console.log('⚠️ Ошибка адаптации графика:', e.message);
             }
           }, 100);
         }
