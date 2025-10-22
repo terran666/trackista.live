@@ -1,11 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { init, dispose } from 'klinecharts';
 import { useBinanceKlines } from '../hooks/useBinanceQuery';
+import { BreakoutIndicator, BreakoutDisplay } from './BreakoutIndicator';
 
 const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, showMidLine = false, onIntervalChange, fullHeight = false, limit = 500 }) => {
   const chartRef = useRef(null);
   const chart = useRef(null);
   const midLineId = useRef(null); // Храним ID средней линии
+  
+  // Состояние для анализа пробоя
+  const [breakoutAnalysis, setBreakoutAnalysis] = useState(null);
+  const [showBreakoutResult, setShowBreakoutResult] = useState(false);
+  const [indicatorsVisible, setIndicatorsVisible] = useState(false);
 
   // Доступные таймфреймы
   const timeframes = [
@@ -270,8 +276,8 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
       // Устанавливаем количество видимых баров в зависимости от размера экрана
       if (chart.current) {
         const visibleRange = isMobile ? 
-          { from: 0.5, to: 1.0 } : // На мобильных показываем 50% данных (+30% баров)
-          { from: 0.4, to: 1.0 };  // На десктопе показываем 60% данных (+30% баров)
+          { from: 0.35, to: 1.0 } : // На мобильных показываем 65% данных 
+          { from: 0.65, to: 1.0 };   // На десктопе показываем 35% данных (еще меньше баров, еще крупнее)
         
         setTimeout(() => {
           try {
@@ -325,8 +331,8 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
         if (chart.current) {
           const isMobile = window.innerWidth <= 768;
           const visibleRange = isMobile ? 
-            { from: 0.5, to: 1.0 } : // На мобильных 50% данных (+30% баров)
-            { from: 0.4, to: 1.0 };  // На десктопе 60% данных (+30% баров)
+            { from: 0.35, to: 1.0 } : // На мобильных 65% данных (+30% баров)
+            { from: 0.22, to: 1.0 };  // На десктопе 78% данных (+30% баров)
           
           setTimeout(() => {
             try {
@@ -466,27 +472,13 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
   if (fullHeight) {
     return (
       <div className="d-flex flex-column h-100">
-        <div className="d-flex justify-content-between align-items-center mb-3 flex-shrink-0">
-          <div>
+        <div className="d-flex justify-content-between align-items-center mb-3 flex-shrink-0 flex-wrap gap-2">
+          <div className="d-flex flex-column">
             <h4 className="mb-1">{symbol || 'BTCUSDT'}</h4>
-            <small className="text-muted">
-              {interval}
-              {isLoading && ' • Загрузка...'}
-              {error && ' • Ошибка загрузки'}
-            </small>
           </div>
-          <div>
-            {error && (
-              <small className="text-danger me-2">
-                Используются тестовые данные
-              </small>
-            )}
-          </div>
-        </div>
 
-        {/* Меню таймфреймов и кнопка обновления */}
-        {onIntervalChange && (
-          <div className="mb-3 flex-shrink-0">
+          {/* Меню таймфреймов и кнопка обновления в одном ряду с названием */}
+          {onIntervalChange && (
             <div className="d-flex align-items-center gap-2 flex-wrap">
               <div className="btn-group btn-group-sm d-flex flex-wrap" role="group" aria-label="Таймфреймы">
                 {timeframes.map((tf) => (
@@ -504,6 +496,103 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
                     {tf.label}
                   </button>
                 ))}
+              </div>
+              
+              {/* Кнопка Пробой с popover */}
+              <div className="position-relative">
+                <button
+                  type="button"
+                  className={`btn btn-sm ${indicatorsVisible ? 'btn-warning' : 'btn-outline-warning'}`}
+                  title={indicatorsVisible ? "Убрать индикаторы пробоя" : "Показать анализ пробоя уровней"}
+                  style={{ 
+                    minWidth: '60px',
+                    fontSize: window.innerWidth <= 768 ? '11px' : '12px',
+                    padding: window.innerWidth <= 768 ? '4px 6px' : '6px 8px'
+                  }}
+                  onClick={() => {
+                  console.log('🎯 Нажата кнопка Пробой, текущее состояние:', indicatorsVisible);
+                  
+                  if (klinesData && klinesData.length > 0 && chart.current) {
+                    // Если индикаторы видны - убираем их
+                    if (indicatorsVisible) {
+                      console.log('🧹 Убираем индикаторы');
+                      
+                      const clearResult = BreakoutIndicator.clearAllIndicators(chart.current);
+                      console.log('🗑️ Результат очистки:', clearResult);
+                      
+                      setIndicatorsVisible(false);
+                      setShowBreakoutResult(false);
+                      setBreakoutAnalysis(null);
+                      
+                      return;
+                    }
+                    
+                    // Если индикаторы не видны - показываем их
+                    console.log('✅ Показываем индикаторы. Данные и график доступны:', {
+                      dataLength: klinesData.length,
+                      chartExists: !!chart.current,
+                      interval: interval
+                    });
+                    
+                    // Рисуем линии поддержки и сопротивления с учетом таймфрейма
+                    const linesResult = BreakoutIndicator.drawSupportResistanceLines(chart.current, klinesData, interval);
+                    
+                    console.log('📊 Результат рисования линий:', JSON.stringify(linesResult, null, 2));
+                    
+                    // Расчитываем Volume Profile для видимых свечей
+                    const volumeProfileResult = BreakoutIndicator.calculateVolumeProfile(klinesData);
+                    console.log('📈 Volume Profile результат:', volumeProfileResult);
+                    
+                    // Рисуем Volume Profile линии если расчет успешен
+                    let vpLinesResult = null;
+                    if (volumeProfileResult.success) {
+                      vpLinesResult = BreakoutIndicator.drawVolumeProfileLines(
+                        chart.current, 
+                        volumeProfileResult.profile, 
+                        klinesData
+                      );
+                      console.log('🎨 Volume Profile линии:', vpLinesResult);
+                    }
+                    
+                    // Анализируем пробой
+                    const analysis = BreakoutIndicator.analyzeBreakout(klinesData, {
+                      lookbackPeriod: 20,
+                      volumeThreshold: 1.5,
+                      priceThreshold: 0.002
+                    });
+                    
+                    // Добавляем информацию о линиях и Volume Profile к анализу
+                    const enhancedAnalysis = {
+                      ...analysis,
+                      linesDrawn: linesResult.success,
+                      linesMessage: linesResult.message,
+                      volumeProfile: volumeProfileResult.success ? volumeProfileResult.profile : null,
+                      volumeProfileMessage: volumeProfileResult.message,
+                      vpLinesDrawn: vpLinesResult?.success || false
+                    };
+                    
+                    setBreakoutAnalysis(enhancedAnalysis);
+                    setShowBreakoutResult(true);
+                    setIndicatorsVisible(true);
+                  } else {
+                    console.warn('❌ Недостаточно данных для анализа:', {
+                      klinesData: !!klinesData,
+                      dataLength: klinesData?.length || 0,
+                      chart: !!chart.current
+                    });
+                  }
+                }}
+              >
+                {indicatorsVisible ? 'Скрыть' : 'Пробой'}
+              </button>
+              
+              {/* Popover результатов анализа */}
+              {showBreakoutResult && breakoutAnalysis && (
+                <BreakoutDisplay 
+                  analysis={breakoutAnalysis}
+                  onClose={() => setShowBreakoutResult(false)}
+                />
+              )}
               </div>
               
               {/* Кнопка обновления */}
@@ -525,8 +614,8 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
                 )}
               </button>
             </div>
-          </div>
-        )}
+          )}
+        </div>
         
         <div 
           ref={chartRef} 
