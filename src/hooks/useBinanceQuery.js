@@ -7,44 +7,35 @@ function isLocalEnvironment() {
   return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 }
 
-// Список CORS прокси для fallback
-const CORS_PROXIES = [
-  'https://proxy.cors.sh/',
-  'https://cors-anywhere.herokuapp.com/',
-  'https://api.allorigins.win/get?url='
-];
-
-// Тихий fetch с переключением на прямой API в продакшене
+// Простой fetch с fallback на один надежный прокси
 async function fetchWithSilentFallback(url, isProduction = false, binanceUrl = '') {
   try {
     const response = await fetch(url);
-    if (!response.ok) {
+    if (!response.ok && response.status !== 403) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return response;
-  } catch (error) {
-    // В продакшене пробуем альтернативные прокси
-    if (isProduction && binanceUrl) {
-      for (let proxy of CORS_PROXIES) {
-        try {
-          let proxyUrl;
-          if (proxy.includes('allorigins')) {
-            proxyUrl = `${proxy}${encodeURIComponent(binanceUrl)}`;
-          } else {
-            proxyUrl = `${proxy}${binanceUrl}`;
-          }
-          
-          const fallbackResponse = await fetch(proxyUrl);
-          if (fallbackResponse.ok) {
-            return fallbackResponse;
-          }
-        } catch (e) {
-          continue; // Пробуем следующий прокси
-        }
-      }
+    if (response.ok) {
+      return response;
     }
-    throw new Error('All proxies failed');
+  } catch (error) {
+    // Ничего не делаем, упадет в catch ниже
   }
+  
+  // Если прямой запрос не работает, пробуем через jsonp или fallback
+  if (isProduction && binanceUrl) {
+    try {
+      // Пробуем через публичный CORS прокси
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(binanceUrl)}`;
+      const fallbackResponse = await fetch(proxyUrl);
+      if (fallbackResponse.ok) {
+        return fallbackResponse;
+      }
+    } catch (e) {
+      // Если и прокси не работает, упадет в основной catch
+    }
+  }
+  
+  throw new Error('API unavailable');
 }
 
 // Хук для получения данных скринера (спот)
@@ -109,13 +100,13 @@ export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 1
             : "http://localhost:3001/api/futures";
           url = `${proxyBase}/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
         } else {
-          // На сервере пробуем другой CORS прокси
+          // На сервере используем прямое подключение к публичному API
           const binanceUrl = spot 
             ? `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`
             : `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
           
-          // Попробуем proxy.cors.sh - бесплатный и надежный
-          url = `https://proxy.cors.sh/${binanceUrl}`;
+          // Сначала пробуем прямой запрос (иногда работает)
+          url = binanceUrl;
         }
         
         // Используем обёртку fetch с fallback для продакшена
@@ -126,17 +117,18 @@ export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 1
         const response = await fetchWithSilentFallback(url, !isLocalEnvironment(), binanceUrl);
         
         let rawData;
+        const responseData = await response.json();
+        
         if (isLocalEnvironment()) {
           // Локально данные приходят напрямую
-          rawData = await response.json();
+          rawData = responseData;
         } else {
-          // Проверяем тип ответа (некоторые прокси оборачивают в объект)
-          const responseData = await response.json();
+          // В продакшене может быть прямой формат или через allorigins
           if (responseData.contents) {
             // allorigins формат
             rawData = JSON.parse(responseData.contents);
           } else if (Array.isArray(responseData)) {
-            // Прямой формат
+            // Прямой формат от Binance
             rawData = responseData;
           } else {
             throw new Error('Unexpected response format');
