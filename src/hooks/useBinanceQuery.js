@@ -82,11 +82,13 @@ export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 5
             : "http://localhost:3001/api/futures";
           url = `${proxyBase}/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
         } else {
-          // На сервере используем публичный CORS прокси
+          // На сервере пробуем несколько CORS прокси
           const binanceUrl = spot 
             ? `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`
             : `https://fapi.binance.com/fapi/v1/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-          url = `https://api.allorigins.win/get?url=${encodeURIComponent(binanceUrl)}`;
+          
+          // Попробуем corsproxy.io - более стабильный
+          url = `https://corsproxy.io/?${encodeURIComponent(binanceUrl)}`;
         }
         
         // Используем обёртку fetch
@@ -97,13 +99,8 @@ export function useBinanceKlines(symbol, interval = '1m', spot = true, limit = 5
           // Локально данные приходят напрямую
           rawData = await response.json();
         } else {
-          // С CORS прокси данные в поле contents
-          const proxyResponse = await response.json();
-          if (proxyResponse.status && proxyResponse.status.http_code === 200) {
-            rawData = JSON.parse(proxyResponse.contents);
-          } else {
-            throw new Error('CORS proxy failed');
-          }
+          // cors-anywhere возвращает данные напрямую (как и локальный прокси)
+          rawData = await response.json();
         }
         
         // Проверяем что данные корректные (массив массивов)
