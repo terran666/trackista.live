@@ -106,8 +106,162 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
   // Инициализация графика
   useEffect(() => {
     if (chartRef.current && !chart.current) {
-      chart.current = init(chartRef.current);
-      console.log('📊 График инициализирован');
+      // Определяем, мобильное ли устройство
+      const isMobile = window.innerWidth <= 768;
+      
+      // Настройки для мобильных устройств
+      const mobileOptions = {
+        grid: {
+          show: true,
+          horizontal: {
+            show: true,
+            size: 1,
+            color: '#f0f0f0',
+            style: 'solid'
+          },
+          vertical: {
+            show: true,
+            size: 1,
+            color: '#f0f0f0',
+            style: 'solid'
+          }
+        },
+        candle: {
+          margin: {
+            top: 0.2,
+            bottom: 0.1
+          },
+          type: 'candle_solid',
+          bar: {
+            upColor: '#26a69a',
+            downColor: '#ef5350',
+            noChangeColor: '#888888'
+          },
+          tooltip: {
+            showRule: 'follow_cross',
+            showType: 'standard',
+            labels: ['时间', '开', '收', '高', '低', '成交量'],
+            values: null,
+            defaultValue: 'n/a',
+            rect: {
+              position: 'fixed',
+              paddingLeft: 0,
+              paddingRight: 0,
+              paddingTop: 0,
+              paddingBottom: 6,
+              offsetLeft: 8,
+              offsetTop: 8,
+              offsetRight: 8,
+              offsetBottom: 8,
+              borderRadius: 4,
+              borderSize: 1,
+              borderColor: '#3f4254',
+              color: '#D9D9D9'
+            },
+            text: {
+              size: 12,
+              family: 'Helvetica Neue',
+              weight: 'normal',
+              color: '#D9D9D9',
+              marginLeft: 8,
+              marginTop: 6,
+              marginRight: 8,
+              marginBottom: 0
+            }
+          }
+        },
+        technicalIndicator: {
+          margin: {
+            top: 0.2,
+            bottom: 0.1
+          },
+          bar: {
+            upColor: '#26a69a',
+            downColor: '#ef5350',
+            noChangeColor: '#888888'
+          },
+          line: {
+            size: 1,
+            colors: ['#FF9600', '#9D65C9', '#2196F3', '#E11D74', '#01C5C4']
+          },
+          circle: {
+            upColor: '#26a69a',
+            downColor: '#ef5350',
+            noChangeColor: '#888888'
+          }
+        },
+        xAxis: {
+          show: true,
+          height: null,
+          axisLine: {
+            show: true,
+            color: '#888888',
+            size: 1
+          },
+          tickText: {
+            show: true,
+            color: '#D9D9D9',
+            family: 'Helvetica Neue',
+            weight: 'normal',
+            size: isMobile ? 10 : 12, // Уменьшаем размер текста на мобильных
+            paddingTop: 3,
+            paddingBottom: 6
+          },
+          tickLine: {
+            show: true,
+            size: 1,
+            length: 3,
+            color: '#888888'
+          }
+        },
+        yAxis: {
+          show: true,
+          width: isMobile ? 50 : 60, // Уменьшаем ширину оси Y на мобильных
+          position: 'right',
+          type: 'normal',
+          inside: false,
+          reverse: false,
+          axisLine: {
+            show: true,
+            color: '#888888',
+            size: 1
+          },
+          tickText: {
+            show: true,
+            color: '#D9D9D9',
+            family: 'Helvetica Neue',
+            weight: 'normal',
+            size: isMobile ? 10 : 12, // Уменьшаем размер текста на мобильных
+            paddingLeft: 3,
+            paddingRight: 6
+          },
+          tickLine: {
+            show: true,
+            size: 1,
+            length: 3,
+            color: '#888888'
+          }
+        }
+      };
+      
+      chart.current = init(chartRef.current, mobileOptions);
+      
+      // Устанавливаем количество видимых баров в зависимости от размера экрана
+      if (chart.current) {
+        const visibleRange = isMobile ? 
+          { from: 0.8, to: 1.0 } : // На мобильных показываем 20% данных (больше баров)
+          { from: 0.7, to: 1.0 };  // На десктопе показываем 30% данных
+        
+        setTimeout(() => {
+          try {
+            chart.current.setVisibleRange(visibleRange);
+          } catch (e) {
+            console.log('Не удалось установить видимый диапазон');
+          }
+        }, 100);
+      }
+      
+      console.log(`📊 График инициализирован для ${isMobile ? 'мобильного' : 'десктопного'} устройства`);
       
       // Для компактного режима принудительно обновляем размер
       if (compact) {
@@ -133,6 +287,32 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
           resizeObserver.disconnect();
         };
       }
+      
+      // Обработчик изменения размера окна для адаптации графика
+      const handleResize = () => {
+        if (chart.current) {
+          const isMobile = window.innerWidth <= 768;
+          const visibleRange = isMobile ? 
+            { from: 0.8, to: 1.0 } : // На мобильных показываем больше баров
+            { from: 0.7, to: 1.0 };  // На десктопе стандартный диапазон
+          
+          setTimeout(() => {
+            try {
+              chart.current.setVisibleRange(visibleRange);
+              chart.current.resize();
+              console.log(`📱 График адаптирован для ${isMobile ? 'мобильного' : 'десктопного'} экрана`);
+            } catch (e) {
+              console.log('Ошибка адаптации графика');
+            }
+          }, 100);
+        }
+      };
+      
+      window.addEventListener('resize', handleResize);
+      
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
     }
 
     return () => {
@@ -255,13 +435,18 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
         {/* Меню таймфреймов и кнопка обновления */}
         {onIntervalChange && (
           <div className="mb-3 flex-shrink-0">
-            <div className="d-flex align-items-center gap-3">
-              <div className="btn-group btn-group-sm" role="group" aria-label="Таймфреймы">
+            <div className="d-flex align-items-center gap-2 flex-wrap">
+              <div className="btn-group btn-group-sm d-flex flex-wrap" role="group" aria-label="Таймфреймы">
                 {timeframes.map((tf) => (
                   <button
                     key={tf.value}
                     type="button"
-                    className={`btn ${interval === tf.value ? 'btn-primary' : 'btn-outline-primary'}`}
+                    className={`btn btn-sm ${interval === tf.value ? 'btn-primary' : 'btn-outline-primary'}`}
+                    style={{ 
+                      minWidth: '40px',
+                      fontSize: window.innerWidth <= 768 ? '11px' : '12px',
+                      padding: window.innerWidth <= 768 ? '4px 6px' : '6px 8px'
+                    }}
                     onClick={() => onIntervalChange(tf.value)}
                   >
                     {tf.label}
@@ -276,6 +461,10 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
                 onClick={handleRefresh}
                 disabled={isLoading}
                 title="Обновить данные и перейти к последнему бару"
+                style={{ 
+                  minWidth: '36px',
+                  fontSize: window.innerWidth <= 768 ? '14px' : '16px'
+                }}
               >
                 {isLoading ? (
                   <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

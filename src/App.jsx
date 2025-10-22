@@ -10,6 +10,24 @@ import CommunityPage from './components/CommunityPage';
 export default function App(){
   const [currentPage, setCurrentPage] = useState('charts');
   
+  // Функция для закрытия мобильного меню
+  const closeMobileMenu = () => {
+    const navbarCollapse = document.querySelector('#navbarNav');
+    if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+      const bsCollapse = new window.bootstrap.Collapse(navbarCollapse, {
+        toggle: false
+      });
+      bsCollapse.hide();
+    }
+  };
+  
+  // Функция для переключения страницы и закрытия меню
+  const handlePageChange = (page) => {
+    console.log(`Переключение на страницу: ${page}`);
+    setCurrentPage(page);
+    closeMobileMenu();
+  };
+  
   // Отладочная информация
   console.log('Текущая страница:', currentPage);
   
@@ -23,8 +41,7 @@ export default function App(){
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              console.log('Переход на главную страницу (графики)');
-              setCurrentPage('charts');
+              handlePageChange('charts');
             }}
             style={{ cursor: 'pointer' }}
           >
@@ -40,55 +57,40 @@ export default function App(){
             <ul className="navbar-nav me-auto">
               <li className="nav-item">
                 <button 
-                  className={`nav-link ${currentPage === 'charts' ? 'active' : ''}`}
-                  onClick={() => {
-                    console.log('Переключение на страницу графиков');
-                    setCurrentPage('charts');
-                  }}
+                  className={`nav-link btn btn-link text-decoration-none ${currentPage === 'charts' ? 'active text-warning' : 'text-white'}`}
+                  onClick={() => handlePageChange('charts')}
                 >
                   Графики
                 </button>
               </li>
               <li className="nav-item">
                 <button 
-                  className={`nav-link ${currentPage === 'screener' ? 'active' : ''}`}
-                  onClick={() => {
-                    console.log('Переключение на страницу скринера');
-                    setCurrentPage('screener');
-                  }}
+                  className={`nav-link btn btn-link text-decoration-none ${currentPage === 'screener' ? 'active text-warning' : 'text-white'}`}
+                  onClick={() => handlePageChange('screener')}
                 >
                   Скринер
                 </button>
               </li>
               <li className="nav-item">
                 <button 
-                  className={`nav-link ${currentPage === 'density' ? 'active' : ''}`}
-                  onClick={() => {
-                    console.log('Переключение на страницу плотности');
-                    setCurrentPage('density');
-                  }}
+                  className={`nav-link btn btn-link text-decoration-none ${currentPage === 'density' ? 'active text-warning' : 'text-white'}`}
+                  onClick={() => handlePageChange('density')}
                 >
                   Плотность
                 </button>
               </li>
               <li className="nav-item">
                 <button 
-                  className={`nav-link ${currentPage === 'community' ? 'active' : ''}`}
-                  onClick={() => {
-                    console.log('Переключение на страницу сообщества');
-                    setCurrentPage('community');
-                  }}
+                  className={`nav-link btn btn-link text-decoration-none ${currentPage === 'community' ? 'active text-warning' : 'text-white'}`}
+                  onClick={() => handlePageChange('community')}
                 >
                   Сообщество
                 </button>
               </li>
               <li className="nav-item">
                 <button 
-                  className={`nav-link ${currentPage === 'signals' ? 'active' : ''}`}
-                  onClick={() => {
-                    console.log('Переключение на страницу сигналов');
-                    setCurrentPage('signals');
-                  }}
+                  className={`nav-link btn btn-link text-decoration-none ${currentPage === 'signals' ? 'active text-warning' : 'text-white'}`}
+                  onClick={() => handlePageChange('signals')}
                 >
                   Сигналы
                 </button>

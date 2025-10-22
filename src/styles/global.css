@@ -181,6 +181,31 @@ html {
   flex: 1;
 }
 
+/* Мобильная адаптация для графиков */
+@media (max-width: 991.98px) {
+  .chart-page-container {
+    height: auto !important;
+    min-height: calc(100vh - 80px);
+  }
+  
+  .chart-main {
+    height: 50vh !important;
+    min-height: 400px;
+  }
+  
+  .chart-sidebar {
+    height: auto !important;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+  
+  /* На мобильных делаем вертикальное расположение */
+  .row.h-100 {
+    height: auto !important;
+    flex-direction: column;
+  }
+}
+
 /* Стили для навигации */
 .navbar .nav-link {
   background: none !important;
@@ -190,6 +215,8 @@ html {
   padding: 0.5rem 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
 }
 
 .navbar .nav-link:hover {
@@ -198,9 +225,35 @@ html {
 }
 
 .navbar .nav-link.active {
-  color: white !important;
+  color: #ffc107 !important;
   font-weight: bold;
-  background-color: rgba(255, 255, 255, 0.2) !important;
+  background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+/* Мобильная навигация */
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    text-align: left;
+  }
+  
+  .navbar-nav .nav-item {
+    margin: 0.25rem 0;
+  }
+  
+  .navbar .nav-link {
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    margin: 0.125rem 0;
+  }
+  
+  .navbar .nav-link:hover,
+  .navbar .nav-link:focus {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+  }
+  
+  .navbar .nav-link.active {
+    background-color: rgba(255, 193, 7, 0.2) !important;
+  }
 }
 
 @media (max-width: 768px) {
