@@ -65,6 +65,35 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
     }
   };
 
+  // Функции управления масштабом и сжатием
+  const zoomOut = () => {
+    if (chart.current && chart.current.zoomAtCoordinate) {
+      chart.current.zoomAtCoordinate(0.9); // Отдаляем
+    }
+  };
+
+  const zoomIn = () => {
+    if (chart.current && chart.current.zoomAtCoordinate) {
+      chart.current.zoomAtCoordinate(1.1); // Приближаем
+    }
+  };
+
+  const moreBars = () => {
+    if (chart.current && chart.current.getBarSpace && chart.current.setBarSpace) {
+      const currentSpace = chart.current.getBarSpace();
+      const newSpace = Math.max(1, currentSpace - 1);
+      chart.current.setBarSpace(newSpace);
+    }
+  };
+
+  const fewerBars = () => {
+    if (chart.current && chart.current.getBarSpace && chart.current.setBarSpace) {
+      const currentSpace = chart.current.getBarSpace();
+      const newSpace = Math.min(20, currentSpace + 1);
+      chart.current.setBarSpace(newSpace);
+    }
+  };
+
   // Функция для добавления горизонтальной линии посередине
   const addMidLine = (data) => {
     if (!chart.current || !data || data.length === 0) return;
@@ -138,7 +167,7 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
             noChangeColor: '#888888'
           },
           tooltip: {
-            showRule: 'follow_cross',
+            showRule: 'none', // Отключаем tooltip с данными OHLCV
             showType: 'standard',
             labels: ['时间', '开', '收', '高', '低', '成交量'],
             values: null,
@@ -257,7 +286,27 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
       
       chart.current = init(chartRef.current, chartOptions);
       
-      // Принудительно отключаем сетку после инициализации
+      // Оптимизация отображения - больше свечей и сжатие
+      if (chart.current) {
+        // 1. Сжимаем бары для отображения большего количества свечей
+        chart.current.setBarSpace(4); // Меньше значение = больше свечей на экране
+        
+        // 2. Убираем пустоту справа
+        chart.current.setOffsetRightDistance(5); // Минимальный отступ справа
+        chart.current.setMaxOffsetRightDistance(10); // Ограничиваем максимальный отступ
+        
+        // 3. Гарантируем минимум видимых свечей
+        if (chart.current.setRightMinVisibleBarCount) {
+          chart.current.setRightMinVisibleBarCount(120);
+        }
+        
+        // 4. Слегка отдаляем для большего обзора
+        if (chart.current.zoomAtCoordinate) {
+          chart.current.zoomAtCoordinate(0.85); // Отдаляем для большего количества свечей
+        }
+      }
+      
+      // Принудительно отключаем сетку и tooltip после инициализации
       if (chart.current && chart.current.setStyles) {
         chart.current.setStyles({
           grid: {
@@ -269,6 +318,12 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
             show: false,
             horizontal: { show: false, line: { show: false } },
             vertical: { show: false, line: { show: false } }
+          },
+          candle: { 
+            tooltip: { showRule: 'none' } 
+          },
+          indicator: { 
+            tooltip: { showRule: 'none' } 
           }
         });
       }
@@ -631,12 +686,6 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
             overflow: 'hidden'
           }}
         />
-        
-        <div className="mt-2 flex-shrink-0">
-          <small className="text-muted">
-            📊 Интерактивный график • Используйте колесо мыши для масштабирования
-          </small>
-        </div>
       </div>
     );
   }
@@ -707,12 +756,6 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
           borderRadius: '8px'
         }}
       />
-      
-      <div className="mt-2">
-        <small className="text-muted">
-          📊 Интерактивный график • Используйте колесо мыши для масштабирования
-        </small>
-      </div>
     </div>
   );
 };
