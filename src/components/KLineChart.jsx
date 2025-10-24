@@ -3,10 +3,11 @@ import { init, dispose } from 'klinecharts';
 import { useBinanceKlines } from '../hooks/useBinanceQuery';
 import { BreakoutIndicator, BreakoutDisplay } from './BreakoutIndicator';
 
-const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, showMidLine = false, onIntervalChange, fullHeight = false, limit = 500 }) => {
+const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, showMidLine = false, onIntervalChange, fullHeight = false, limit = 500, showVolume = false, showVolume2 = false }) => {
   const chartRef = useRef(null);
   const chart = useRef(null);
   const midLineId = useRef(null); // Храним ID средней линии
+  const volumeIndicatorId = useRef(null); // Храним ID индикатора объема
   
   // Состояние для анализа пробоя
   const [breakoutAnalysis, setBreakoutAnalysis] = useState(null);
@@ -306,7 +307,7 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
         }
       }
       
-      // Принудительно отключаем сетку и tooltip после инициализации
+      // Принудительно отключаем сетку, рамки и tooltip после инициализации
       if (chart.current && chart.current.setStyles) {
         chart.current.setStyles({
           grid: {
@@ -320,10 +321,24 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
             vertical: { show: false, line: { show: false } }
           },
           candle: { 
-            tooltip: { showRule: 'none' } 
+            tooltip: { showRule: 'none' },
+            border: { show: false } // Убираем рамки свечей
           },
           indicator: { 
-            tooltip: { showRule: 'none' } 
+            tooltip: { showRule: 'none' }
+          },
+          // Убираем все возможные рамки и границы
+          xAxis: {
+            show: true,
+            axisLine: { show: false }, // Убираем линию оси X
+            tickLine: { show: false }, // Убираем засечки оси X
+            splitLine: { show: false } // Убираем разделители оси X
+          },
+          yAxis: {
+            show: true,
+            axisLine: { show: false }, // Убираем линию оси Y
+            tickLine: { show: false }, // Убираем засечки оси Y
+            splitLine: { show: false } // Убираем разделители оси Y
           }
         });
       }
@@ -482,6 +497,136 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
       }
     }
   }, [showMidLine]);
+
+  // Эффект для управления индикатором объема
+  useEffect(() => {
+    if (chart.current) {
+      if (showVolume) {
+        // Сначала очищаем ВСЕ индикаторы и элементы
+        try {
+          // Убираем все индикаторы через правильный API v9.8.9
+          chart.current.removeIndicator();
+          
+          // Очищаем все фигуры и линии
+          if (chart.current.removeAllShapes) {
+            chart.current.removeAllShapes();
+          }
+          
+          // Очищаем все оверлеи
+          if (chart.current.removeOverlay) {
+            chart.current.removeOverlay();
+          }
+          
+          // Очищаем индикаторы пробоя если есть
+          if (BreakoutIndicator && BreakoutIndicator.clearAllIndicators) {
+            BreakoutIndicator.clearAllIndicators(chart.current);
+          }
+          
+          // Сбрасываем состояние других кнопок
+          setIndicatorsVisible(false);
+          
+          console.log('🧹 Все индикаторы очищены перед добавлением объема');
+        } catch (error) {
+          console.log('Ошибка очистки индикаторов:', error);
+        }
+        
+        // Теперь добавляем ТОЛЬКО индикатор объема БЕЗ линий MA
+        try {
+          // Сначала переопределяем индикатор VOL чтобы убрать MA линии
+          if (chart.current.overrideTechnicalIndicator) {
+            chart.current.overrideTechnicalIndicator({
+              name: 'VOL',
+              shortName: 'VOL',
+              calcParams: [], // Пустые параметры = нет скользящих средних
+              figures: [
+                {
+                  key: 'volume',
+                  title: 'VOL',
+                  type: 'bar',
+                  baseValue: 0,
+                  styles: (data, indicator, defaultStyles) => {
+                    const kLineData = data.kLineData;
+                    if (kLineData) {
+                      return {
+                        color: kLineData.close > kLineData.open ? '#26a69a' : '#ef5350'
+                      };
+                    }
+                    return { color: '#888888' };
+                  }
+                }
+              ]
+            });
+            console.log('🔧 Индикатор VOL переопределен без MA линий');
+          }
+          
+          // Теперь создаем индикатор с параметрами без MA
+          let createdVolumeId;
+          
+          // Пробуем создать с пустыми параметрами для MA
+          if (chart.current.createIndicator) {
+            createdVolumeId = chart.current.createIndicator('VOL', true, { 
+              id: 'volume_pane',
+              height: compact ? 60 : 80,
+              calcParams: [], // Отключаем MA параметры
+              styles: {
+                ma: [] // Убираем стили для MA линий
+              }
+            });
+          } else if (chart.current.createTechnicalIndicator) {
+            createdVolumeId = chart.current.createTechnicalIndicator('VOL', true, { 
+              id: 'volume_pane',
+              height: compact ? 60 : 80,
+              calcParams: [], // Отключаем MA параметры
+              styles: {
+                ma: [] // Убираем стили для MA линий
+              }
+            });
+          }
+          
+          // Сохраняем ID для последующего удаления
+          volumeIndicatorId.current = createdVolumeId;
+          
+          console.log('📈 Чистый индикатор объема без MA линий включен:', createdVolumeId);
+        } catch (error) {
+          console.error('❌ Ошибка создания индикатора объема:', error);
+          console.log('Доступные методы графика:', Object.getOwnPropertyNames(chart.current));
+        }
+      } else {
+        // Убираем ТОЛЬКО индикатор объема при втором клике
+        try {
+          // Пробуем удалить по сохраненному ID
+          if (volumeIndicatorId.current && chart.current.removeIndicator) {
+            chart.current.removeIndicator(volumeIndicatorId.current);
+            volumeIndicatorId.current = null;
+            console.log('🗑️ Индикатор объема удален по ID');
+          } else {
+            // Альтернативный способ - удаляем по строковому ID
+            if (chart.current.removeIndicator) {
+              chart.current.removeIndicator('volume_pane');
+              console.log('🗑️ Индикатор объема удален по строковому ID');
+            }
+          }
+          
+          // Если не помогло - удаляем все индикаторы
+          if (chart.current.removeIndicator) {
+            chart.current.removeIndicator();
+            console.log('🗑️ Все индикаторы удалены как fallback');
+          }
+          
+        } catch (error) {
+          console.log('Ошибка удаления индикатора объема:', error);
+        }
+      }
+    }
+  }, [showVolume, compact]);
+
+  // Эффект для кнопки ПАМП - управляется в ScreenerPage, здесь ничего не делаем
+  useEffect(() => {
+    // Логика ПАМП-монет обрабатывается в ScreenerPage, здесь только принимаем параметр
+    if (showVolume2) {
+      console.log('� ПАМП режим активен для этого графика');
+    }
+  }, [showVolume2]);
 
   if (compact) {
     // Компактный режим для скринера

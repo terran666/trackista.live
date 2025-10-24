@@ -45,8 +45,33 @@ export default function App(){
             }}
             style={{ cursor: 'pointer' }}
           >
-            <img src={logo} alt="Trackista" width="60" height="60" className="me-3"/>
-            <span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Trackista</span>
+            {/* Мобильная версия - компактный логотип */}
+            <img 
+              src={logo} 
+              alt="Trackista" 
+              className="me-2 d-lg-none" 
+              style={{ width: '40px', height: '40px' }}
+            />
+            <span 
+              className="d-lg-none" 
+              style={{ fontSize: '1.2rem', fontWeight: 'bold' }}
+            >
+              Trackista
+            </span>
+            
+            {/* Десктопная версия - полный логотип */}
+            <img 
+              src={logo} 
+              alt="Trackista" 
+              className="me-3 d-none d-lg-block" 
+              style={{ width: '60px', height: '60px' }}
+            />
+            <span 
+              className="d-none d-lg-block" 
+              style={{ fontSize: '1.5rem', fontWeight: 'bold' }}
+            >
+              Trackista
+            </span>
           </a>
           
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -54,7 +79,8 @@ export default function App(){
           </button>
           
           <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav me-auto">
+            {/* Десктопная навигация - показывается только на больших экранах */}
+            <ul className="navbar-nav me-auto d-none d-lg-flex">
               <li className="nav-item">
                 <button 
                   className={`nav-link btn btn-link text-decoration-none ${currentPage === 'charts' ? 'active text-warning' : 'text-white'}`}
@@ -96,7 +122,37 @@ export default function App(){
                 </button>
               </li>
             </ul>
-            <ul className="navbar-nav">
+            
+            {/* Мобильная навигация - компактная версия с иконками */}
+            <ul className="navbar-nav me-auto d-lg-none">
+              <li className="nav-item">
+                <button 
+                  className={`nav-link btn btn-link text-decoration-none ${currentPage === 'charts' ? 'active text-warning' : 'text-white'}`}
+                  onClick={() => handlePageChange('charts')}
+                >
+                  📈 Графики
+                </button>
+              </li>
+              <li className="nav-item">
+                <button 
+                  className={`nav-link btn btn-link text-decoration-none ${currentPage === 'screener' ? 'active text-warning' : 'text-white'}`}
+                  onClick={() => handlePageChange('screener')}
+                >
+                  🔍 Скринер
+                </button>
+              </li>
+              <li className="nav-item">
+                <button 
+                  className={`nav-link btn btn-link text-decoration-none ${currentPage === 'density' ? 'active text-warning' : 'text-white'}`}
+                  onClick={() => handlePageChange('density')}
+                >
+                  📊 Плотность
+                </button>
+              </li>
+            </ul>
+            
+            {/* Login - только на десктопе */}
+            <ul className="navbar-nav d-none d-lg-flex">
               <li className="nav-item">
                 <a className="nav-link" href="#">Login</a>
               </li>
