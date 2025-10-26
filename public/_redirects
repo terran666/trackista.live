@@ -1,0 +1,8 @@
+# SPA Fallback Rules
+/*    /index.html   200
+
+# Specific routes for better SEO
+/density    /index.html   200
+/screener   /index.html   200
+/community  /index.html   200
+/charts     /index.html   200

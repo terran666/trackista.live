@@ -9,6 +9,7 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: false,
     minify: 'terser',
+    copyPublicDir: true,
     rollupOptions: {
       output: {
         manualChunks: {
