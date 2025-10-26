@@ -213,6 +213,38 @@ html {
   }
 }
 
+/* Мобильная адаптация для планшетов */
+@media (max-width: 768px) {
+  /* Убираем отступы на странице плотности */
+  .density-page .container-fluid {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .density-page .row {
+    margin: 0 !important;
+    gap: 0 !important;
+  }
+  
+  .density-page .col-12,
+  .density-page .col-lg-6 {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  /* Компактные кнопки управления */
+  .density-page .btn-group .btn {
+    font-size: 0.75rem !important;
+    padding: 4px 8px !important;
+  }
+  
+  /* Заголовок компактнее */
+  .density-page .d-flex.justify-content-between {
+    padding: 6px 10px !important;
+    margin-bottom: 6px !important;
+  }
+}
+
 /* Дополнительные стили для очень маленьких экранов */
 @media (max-width: 576px) {
   .chart-main {
@@ -226,52 +258,138 @@ html {
     min-height: 250px;
   }
   
-  /* Убираем отступы на странице плотности для мобильных */
+  /* АГРЕССИВНОЕ убираем ВСЕ отступы на странице плотности для мобильных */
+  .density-page {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
   .density-page .container-fluid {
     padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
   }
   
   .density-page .row {
     margin: 0 !important;
+    gap: 0 !important;
+    width: 100% !important;
   }
   
-  .density-page .col-12 {
+  .density-page .col-12,
+  .density-page .col-lg-6 {
     padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
   
   .density-page .card {
-    margin-bottom: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
     border-radius: 0 !important;
     border: none !important;
+    box-shadow: none !important;
+    width: 100% !important;
   }
   
   .density-page .card-body {
     padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
   }
   
   /* Убираем все отступы между элементами на мобильных */
   .density-page .mb-3, 
   .density-page .mb-4, 
   .density-page .mb-lg-4, 
-  .density-page .mb-lg-3 {
-    margin-bottom: 0.25rem !important;
+  .density-page .mb-lg-3,
+  .density-page .mb-2,
+  .density-page .mb-1 {
+    margin-bottom: 0 !important;
   }
   
   /* Убираем отступы у таблиц */
   .density-page .table {
     margin-bottom: 0 !important;
+    width: 100% !important;
   }
   
-  /* Заголовок более компактный */
+  /* Заголовок более компактный - убираем отступы полностью */
   .density-page .d-flex.justify-content-between {
-    padding: 8px !important;
-    margin-bottom: 8px !important;
+    padding: 4px 8px !important;
+    margin-bottom: 4px !important;
+    width: 100% !important;
+    max-width: 100vw !important;
   }
   
   /* Графики на всю ширину без отступов */
   .density-page .density-chart-container {
     margin: 0 !important;
     padding: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+  
+  /* Блок анализа DOM стенки - убираем все отступы */
+  .density-page .border.rounded {
+    margin: 0 !important;
+    padding: 4px !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+  }
+  
+  /* Кнопки управления - фиксируем разъезжающиеся кнопки */
+  .density-page .btn-group {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    width: 100% !important;
+  }
+  
+  .density-page .btn-group .btn {
+    font-size: 0.6rem !important;
+    padding: 3px 6px !important;
+    min-width: auto !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+  
+  /* Контейнер кнопок - убираем gap который может вызывать разъезжание */
+  .density-page .d-flex.gap-1,
+  .density-page .d-flex.gap-2 {
+    gap: 2px !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+  }
+  
+  /* Все кнопки компактнее */
+  .density-page .btn-sm {
+    font-size: 0.65rem !important;
+    padding: 3px 8px !important;
+    min-width: auto !important;
+    white-space: nowrap !important;
+  }
+  
+  /* Контейнер для кнопок торговли и слежения */
+  .density-page .container-fluid.px-0 {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  
+  .density-page .row.g-2 {
+    gap: 2px !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  
+  .density-page .col-12.col-md-auto {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
 
@@ -521,34 +639,59 @@ div[class*="col-"] .btn.rounded-pill,
     font-size: 0.9rem !important;
   }
   
-  /* Мобильные стили для кнопок на странице плотности */
-  .density-page .btn-sm {
-    font-size: 0.8rem !important;
-    padding: 6px 10px !important;
-  }
-  
-  /* Адаптивная таблица DOM данных */
+  /* Адаптивная таблица DOM данных - ЭКСТРА компактная */
   .density-page .table {
-    font-size: 0.75rem !important;
+    font-size: 0.65rem !important;
+    margin: 0 !important;
+    width: 100% !important;
   }
   
-  .density-page .table td {
-    padding: 2px 4px !important;
-    font-size: 0.7rem !important;
+  .density-page .table td,
+  .density-page .table th {
+    padding: 1px 2px !important;
+    font-size: 0.6rem !important;
+    line-height: 1.1 !important;
+    border: none !important;
+    vertical-align: middle !important;
   }
   
-  /* Кнопки управления - перенос на новую строку если не помещаются */
-  .density-page .row.g-2 {
-    gap: 0.25rem !important;
+  /* Мобильная компактная таблица */
+  .density-page .d-block.d-md-none .table td {
+    font-size: 0.55rem !important;
+    padding: 1px !important;
+    width: auto !important;
   }
   
-  .density-page .btn-group {
-    flex-wrap: wrap;
-  }
-  
-  /* Высота графиков на мобильных */
+  /* Высота графиков на мобильных - меньше */
   .density-chart-container {
-    height: 280px !important;
+    height: 250px !important;
+    max-height: 250px !important;
+  }
+  
+  /* Прогресс-бары компактнее */
+  .density-page .progress {
+    height: 16px !important;
+    margin-bottom: 4px !important;
+    width: 100% !important;
+  }
+  
+  /* Кнопки следить компактнее */
+  .density-page .btn-outline-info {
+    font-size: 0.6rem !important;
+    padding: 2px 6px !important;
+  }
+  
+  /* Позиционирование попапа цветов */
+  .density-page .position-absolute.bg-white {
+    right: 0 !important;
+    min-width: 120px !important;
+    padding: 4px !important;
+  }
+  
+  /* Цветовые квадратики меньше */
+  .density-page .position-absolute.bg-white > div > div {
+    width: 20px !important;
+    height: 20px !important;
   }
 }
 
