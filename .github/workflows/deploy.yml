@@ -48,6 +48,9 @@ jobs:
         # Устанавливаем кэширование для статических ресурсов
         aws s3 sync dist/assets/ s3://${{ secrets.S3_BUCKET_NAME }}/assets/ --cache-control "public, max-age=31536000"
         
+        # Настраиваем S3 для SPA (Single Page Application)
+        aws s3 website s3://${{ secrets.S3_BUCKET_NAME }} --index-document index.html --error-document index.html
+        
         # Инвалидируем CloudFront кэш если есть
         if [ ! -z "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" ]; then
           aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
