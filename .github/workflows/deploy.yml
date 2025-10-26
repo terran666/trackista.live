@@ -65,22 +65,36 @@ jobs:
         
         echo "🔧 Configuring S3 for SPA routing with proper error handling..."
         
+        # Проверяем, что файлы существуют
+        echo "📋 Checking build files..."
+        ls -la dist/
+        
         # Создаем error.html как копию index.html для SPA routing
-        aws s3 cp dist/index.html s3://trackista-live/error.html \
-          --cache-control "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate" \
-          --expires "Thu, 01 Jan 1970 00:00:00 GMT" \
-          --metadata-directive REPLACE
+        if [ -f "dist/index.html" ]; then
+          echo "✅ Found dist/index.html, setting up SPA routing..."
+          aws s3 cp dist/index.html s3://trackista-live/error.html \
+            --cache-control "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate" \
+            --expires "Thu, 01 Jan 1970 00:00:00 GMT" \
+            --metadata-directive REPLACE
+        else
+          echo "❌ dist/index.html not found! Build may have failed."
+          exit 1
+        fi
         
         # Настраиваем S3 для SPA (Single Page Application)
         aws s3 website s3://trackista-live --index-document index.html --error-document error.html
         
         # Дополнительно копируем index.html для всех возможных роутов
         echo "📁 Setting up SPA routing fallbacks..."
-        aws s3 cp dist/index.html s3://trackista-live/density/index.html \
+        aws s3 cp dist/index.html s3://trackista-live/density \
           --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
           --metadata-directive REPLACE
         
-        aws s3 cp dist/index.html s3://trackista-live/charts/index.html \
+        aws s3 cp dist/index.html s3://trackista-live/screener \
+          --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
+          --metadata-directive REPLACE
+          
+        aws s3 cp dist/index.html s3://trackista-live/community \
           --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
           --metadata-directive REPLACE
         
