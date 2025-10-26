@@ -50,6 +50,14 @@ jobs:
         # Синхронизируем все файлы заново с timestamp
         aws s3 sync dist/ s3://trackista-live --delete
         
+        # Немедленно создаем базовые файлы для SPA роутинга ПЕРЕД конфигурацией
+        echo "🔧 Creating immediate SPA route files..."
+        aws s3 cp s3://trackista-live/index.html s3://trackista-live/error.html
+        aws s3 cp s3://trackista-live/index.html s3://trackista-live/density
+        aws s3 cp s3://trackista-live/index.html s3://trackista-live/screener  
+        aws s3 cp s3://trackista-live/index.html s3://trackista-live/community
+        aws s3 cp s3://trackista-live/index.html s3://trackista-live/charts
+        
         # Ultra aggressive no-cache для HTML файлов
         aws s3 cp dist/index.html s3://trackista-live/index.html \
           --cache-control "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate" \
@@ -124,17 +132,14 @@ jobs:
           exit 1
         fi
         
-        # 4. Настраиваем S3 website configuration с routing rules
-        echo "🌐 Configuring S3 website settings with routing rules..."
+        # 4. Простая и надежная S3 website конфигурация
+        echo "🌐 Setting up simple S3 website configuration..."
         
-        # Создаем routing rules JSON для SPA
-        echo '{"IndexDocument":{"Suffix":"index.html"},"ErrorDocument":{"Key":"index.html"},"RoutingRules":[{"Condition":{"HttpErrorCodeReturnedEquals":"404"},"Redirect":{"ReplaceKeyWith":"index.html"}}]}' > routing-rules.json
-        
-        # Применяем website конфигурацию с routing rules
-        aws s3api put-bucket-website --bucket trackista-live --website-configuration file://routing-rules.json
-        
-        # Также устанавливаем простую website конфигурацию как fallback
+        # Устанавливаем простую website конфигурацию
         aws s3 website s3://trackista-live --index-document index.html --error-document index.html
+        
+        # Проверяем что error.html существует
+        aws s3 ls s3://trackista-live/error.html || aws s3 cp s3://trackista-live/index.html s3://trackista-live/error.html
         
         # 5. Проверяем что все файлы загружены
         echo "🔍 Verifying uploaded files..."
@@ -144,4 +149,25 @@ jobs:
         echo "🔍 Verifying S3 website configuration..."
         aws s3api get-bucket-website --bucket trackista-live
         
-        echo "✅ Deployment completed with SPA routing support. Timestamp: $TIMESTAMP"
+        # 7. Финальная проверка и создание недостающих SPA файлов
+        echo "🔄 Final SPA routing files verification and creation..."
+        
+        # Проверяем каждый route файл и создаем если отсутствует
+        for route in density screener community charts; do
+          echo "Checking route: /$route"
+          if ! aws s3 ls s3://trackista-live/$route > /dev/null 2>&1; then
+            echo "Creating missing route: /$route"
+            aws s3 cp s3://trackista-live/index.html s3://trackista-live/$route \
+              --content-type "text/html" \
+              --cache-control "no-cache, no-store, must-revalidate, max-age=0"
+          fi
+        done
+        
+        # Проверяем error.html
+        if ! aws s3 ls s3://trackista-live/error.html > /dev/null 2>&1; then
+          echo "Creating missing error.html"
+          aws s3 cp s3://trackista-live/index.html s3://trackista-live/error.html \
+            --cache-control "no-cache, no-store, must-revalidate, max-age=0"
+        fi
+        
+        echo "✅ Deployment completed with verified SPA routing support. Timestamp: $TIMESTAMP"
