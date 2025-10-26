@@ -4,6 +4,7 @@ import { formatPrice, formatVolume, formatPercent, getPriceChangeColor } from '.
 import KLineChart from './KLineChart';
 
 export default function DensityPage() {
+  // VERSION: mobile-spacing-fix-v27102025
   const [isCompactView, setIsCompactView] = useState(true);
   const [isSpot, setIsSpot] = useState(true);
   const [coinIntervals, setCoinIntervals] = useState({});

@@ -245,6 +245,7 @@ html {
   }
 }
 
+/* ВЕРСИЯ: mobile-spacing-fix-v27102025 */
 /* Дополнительные стили для очень маленьких экранов */
 @media (max-width: 576px) {
   .chart-main {
