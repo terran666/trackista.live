@@ -15,7 +15,11 @@ export default defineConfig({
           vendor: ['react', 'react-dom'],
           charts: ['klinecharts'],
           utils: ['axios', '@tanstack/react-query']
-        }
+        },
+        // Добавляем timestamp к именам файлов для принудительного обновления
+        entryFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
+        chunkFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
+        assetFileNames: `assets/[name]-[hash]-${Date.now()}.[ext]`
       }
     },
     chunkSizeWarningLimit: 1000

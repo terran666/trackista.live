@@ -35,24 +35,36 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: eu-central-1
         
-    - name: Deploy to S3
+    - name: Deploy to S3 (Ultra Aggressive Cache Busting)
       run: |
+        echo "🧹 Ultra aggressive S3 bucket cleaning..."
         # Полная очистка S3 bucket
-        aws s3 rm s3://${{ secrets.S3_BUCKET_NAME }} --recursive
+        aws s3 rm s3://trackista-live --recursive
         
-        # Синхронизируем все файлы заново
-        aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+        echo "⏳ Waiting for S3 cleanup to complete..."
+        sleep 10
         
-        # Устанавливаем no-cache для HTML файлов
-        aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET_NAME }}/index.html --cache-control "no-cache, no-store, must-revalidate" --metadata-directive REPLACE
+        echo "🚀 Deploying with timestamp-based cache busting..."
+        TIMESTAMP=$(date +%s)
         
-        # Перезаписываем JS и CSS файлы без кэширования
-        aws s3 sync dist/assets/ s3://${{ secrets.S3_BUCKET_NAME }}/assets/ --cache-control "no-cache, max-age=0" --metadata-directive REPLACE
+        # Синхронизируем все файлы заново с timestamp
+        aws s3 sync dist/ s3://trackista-live --delete
         
+        # Ultra aggressive no-cache для HTML файлов
+        aws s3 cp dist/index.html s3://trackista-live/index.html \
+          --cache-control "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate" \
+          --expires "Thu, 01 Jan 1970 00:00:00 GMT" \
+          --metadata-directive REPLACE \
+          --metadata "timestamp=$TIMESTAMP"
+        
+        # Перезаписываем все assets с ultra aggressive no-cache
+        aws s3 sync dist/assets/ s3://trackista-live/assets/ \
+          --cache-control "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0" \
+          --expires "Thu, 01 Jan 1970 00:00:00 GMT" \
+          --metadata-directive REPLACE
+        
+        echo "🔧 Configuring S3 for SPA routing..."
         # Настраиваем S3 для SPA (Single Page Application)
-        aws s3 website s3://${{ secrets.S3_BUCKET_NAME }} --index-document index.html --error-document index.html
+        aws s3 website s3://trackista-live --index-document index.html --error-document index.html
         
-        # Инвалидируем CloudFront кэш если есть
-        if [ ! -z "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" ]; then
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
-        fi
+        echo "✅ Deployment completed with timestamp: $TIMESTAMP"
