@@ -640,6 +640,35 @@ div[class*="col-"] .btn.rounded-pill,
   .density-page .border.rounded {
     font-size: 0.95rem !important;
   }
+  
+  /* Прогресс-бары для планшетов */
+  .density-page .progress {
+    height: 18px !important;
+  }
+  
+  .density-page .progress .progress-bar {
+    line-height: 18px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Стили прогресс-баров для десктопа */
+@media (min-width: 769px) {
+  .density-page .progress {
+    height: 20px !important;
+    margin-bottom: 4px !important;
+    margin-top: 0 !important;
+    background-color: #e9ecef !important;
+    border-radius: 0.375rem !important;
+    overflow: hidden !important;
+  }
+  
+  .density-page .progress .progress-bar {
+    height: 100% !important;
+    line-height: 20px !important;
+    font-size: 0.875rem !important;
+    transition: width 0.6s ease !important;
+  }
 }
 
 @media (max-width: 576px) {
@@ -680,12 +709,23 @@ div[class*="col-"] .btn.rounded-pill,
     max-height: 250px !important;
   }
   
-  /* Прогресс-бары с отступами */
+  /* Прогресс-бары с отступами - МОБИЛЬНАЯ ВЕРСИЯ */
   .density-page .progress {
     height: 16px !important;
     margin-bottom: 6px !important; /* Увеличиваем отступ снизу */
     margin-top: 2px !important; /* Добавляем отступ сверху */
     width: 100% !important;
+    background-color: #e9ecef !important; /* Фон прогресс-бара */
+    border-radius: 0.375rem !important; /* Скругление углов */
+    overflow: hidden !important;
+  }
+  
+  /* Стили для progress-bar внутри */
+  .density-page .progress .progress-bar {
+    height: 100% !important;
+    line-height: 16px !important; /* Выравнивание текста по центру */
+    font-size: 0.7rem !important;
+    transition: width 0.6s ease !important;
   }
   
   /* Кнопки следить компактнее */
