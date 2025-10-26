@@ -261,41 +261,39 @@ export default function DensityPage() {
                             
                             {/* Горизонтальная таблица для мобильных - названия сверху, данные снизу */}
                             <div className="d-block d-md-none">
-                              <table className="table table-borderless table-sm mb-0" style={{ fontSize: '0.75rem' }}>
+                              <table className="table table-borderless table-sm mb-0" style={{ fontSize: '0.8rem' }}>
                                 <thead>
                                   <tr>
-                                    <th style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="text-muted fw-bold">Стенка</th>
-                                    <th style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="text-muted fw-bold">На цене</th>
-                                    <th style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="text-muted fw-bold">До цены</th>
-                                    <th style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="text-muted fw-bold">Съедание</th>
+                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-bold">Стенка</th>
+                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-bold">На цене</th>
+                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-bold">До цены</th>
+                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-bold">Съедание</th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="text-dark fw-bold">300т</td>
-                                    <td style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="text-dark fw-bold">2000</td>
-                                    <td style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="text-danger fw-bold">+2.5%</td>
-                                    <td style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="fw-bold">~12 мин</td>
+                                    <td style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-dark fw-bold">300т</td>
+                                    <td style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-dark fw-bold">2000</td>
+                                    <td style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-danger fw-bold">+2.5%</td>
+                                    <td style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">~12 мин</td>
                                   </tr>
                                 </tbody>
                               </table>
                               
                               {/* Вторая строка с оставшимися данными */}
-                              <table className="table table-borderless table-sm mb-0 mt-2" style={{ fontSize: '0.75rem' }}>
+                              <table className="table table-borderless table-sm mb-0 mt-2" style={{ fontSize: '0.8rem' }}>
                                 <thead>
                                   <tr>
-                                    <th style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="text-muted fw-bold">Время до</th>
-                                    <th style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="text-muted fw-bold">Жизнь</th>
-                                    <th style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="text-muted fw-bold">Активность</th>
-                                    <th style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }}></th>
+                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '33%' }} className="text-muted fw-bold">Время до</th>
+                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '33%' }} className="text-muted fw-bold">Жизнь</th>
+                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '34%' }} className="text-muted fw-bold">Активность</th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="fw-bold">~45 мин</td>
-                                    <td style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="fw-bold">2.5ч</td>
-                                    <td style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }} className="fw-bold">Высокая</td>
-                                    <td style={{ padding: '4px 2px', textAlign: 'center', border: 'none' }}></td>
+                                    <td style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">~45 мин</td>
+                                    <td style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">2.5ч</td>
+                                    <td style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">Высокая</td>
                                   </tr>
                                 </tbody>
                               </table>
