@@ -259,35 +259,38 @@ export default function DensityPage() {
                               </table>
                             </div>
                             
-                            {/* Компактная таблица для мобильных */}
+                            {/* Bootstrap grid для мобильных - названия сверху, данные снизу */}
                             <div className="d-block d-md-none">
-                              <table className="table table-borderless table-sm mb-0" style={{ fontSize: '0.8rem' }}>
-                                <tbody>
-                                  <tr>
-                                    <td style={{ padding: '2px 4px', width: '35%' }} className="text-muted fw-bold">Стенка:</td>
-                                    <td style={{ padding: '2px 4px' }} className="text-dark fw-bold">300т</td>
-                                    <td style={{ padding: '2px 4px', width: '30%' }} className="text-muted fw-bold">На цене:</td>
-                                    <td style={{ padding: '2px 4px' }} className="text-dark fw-bold">2000</td>
-                                  </tr>
-                                  <tr>
-                                    <td style={{ padding: '2px 4px' }} className="text-muted fw-bold">До цены:</td>
-                                    <td style={{ padding: '2px 4px' }} className="text-danger fw-bold">+2.5%</td>
-                                    <td style={{ padding: '2px 4px' }} className="text-muted fw-bold">Съедание:</td>
-                                    <td style={{ padding: '2px 4px' }} className="fw-bold">~12 мин</td>
-                                  </tr>
-                                  <tr>
-                                    <td style={{ padding: '2px 4px' }} className="text-muted fw-bold">Время до:</td>
-                                    <td style={{ padding: '2px 4px' }} className="fw-bold">~45 мин</td>
-                                    <td style={{ padding: '2px 4px' }} className="text-muted fw-bold">Жизнь:</td>
-                                    <td style={{ padding: '2px 4px' }} className="fw-bold">2.5ч</td>
-                                  </tr>
-                                  <tr>
-                                    <td style={{ padding: '2px 4px' }} className="text-muted fw-bold">Активность:</td>
-                                    <td style={{ padding: '2px 4px' }} className="fw-bold">Высокая</td>
-                                    <td colSpan="2"></td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                              <div className="row g-2" style={{ fontSize: '0.8rem' }}>
+                                <div className="col-6">
+                                  <div className="text-muted fw-bold mb-1">Стенка</div>
+                                  <div className="text-dark fw-bold">300т</div>
+                                </div>
+                                <div className="col-6">
+                                  <div className="text-muted fw-bold mb-1">На цене</div>
+                                  <div className="text-dark fw-bold">2000</div>
+                                </div>
+                                <div className="col-6">
+                                  <div className="text-muted fw-bold mb-1">До цены</div>
+                                  <div className="text-danger fw-bold">+2.5%</div>
+                                </div>
+                                <div className="col-6">
+                                  <div className="text-muted fw-bold mb-1">Съедание</div>
+                                  <div className="fw-bold">~12 мин</div>
+                                </div>
+                                <div className="col-6">
+                                  <div className="text-muted fw-bold mb-1">Время до</div>
+                                  <div className="fw-bold">~45 мин</div>
+                                </div>
+                                <div className="col-6">
+                                  <div className="text-muted fw-bold mb-1">Жизнь</div>
+                                  <div className="fw-bold">2.5ч</div>
+                                </div>
+                                <div className="col-12">
+                                  <div className="text-muted fw-bold mb-1">Активность</div>
+                                  <div className="fw-bold">Высокая</div>
+                                </div>
+                              </div>
                             </div>
                           </div>
                           
