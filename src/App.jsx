@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.css';
 import logo from './components/img/logo.png';
@@ -9,9 +9,28 @@ import CommunityPage from './components/CommunityPage';
 
 export default function App(){
   const [currentPage, setCurrentPage] = useState(() => {
-    // Восстанавливаем последнюю активную страницу из localStorage
-    return localStorage.getItem('trackista-current-page') || 'charts';
+    // Сначала проверяем URL, затем localStorage
+    const path = window.location.pathname.replace('/', '') || 'charts';
+    const validPages = ['charts', 'screener', 'density', 'community'];
+    const pageFromUrl = validPages.includes(path) ? path : null;
+    
+    return pageFromUrl || localStorage.getItem('trackista-current-page') || 'charts';
   });
+
+  // Обработка изменений URL (для кнопок браузера)
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.replace('/', '') || 'charts';
+      const validPages = ['charts', 'screener', 'density', 'community'];
+      if (validPages.includes(path)) {
+        setCurrentPage(path);
+        localStorage.setItem('trackista-current-page', path);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
   
   // Функция для закрытия мобильного меню
   const closeMobileMenu = () => {
@@ -30,6 +49,9 @@ export default function App(){
     setCurrentPage(page);
     // Сохраняем текущую страницу в localStorage
     localStorage.setItem('trackista-current-page', page);
+    // Обновляем URL без перезагрузки страницы
+    const newUrl = page === 'charts' ? '/' : `/${page}`;
+    window.history.pushState(null, '', newUrl);
     closeMobileMenu();
   };
   

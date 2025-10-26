@@ -63,8 +63,25 @@ jobs:
           --expires "Thu, 01 Jan 1970 00:00:00 GMT" \
           --metadata-directive REPLACE
         
-        echo "🔧 Configuring S3 for SPA routing..."
-        # Настраиваем S3 для SPA (Single Page Application)
-        aws s3 website s3://trackista-live --index-document index.html --error-document index.html
+        echo "🔧 Configuring S3 for SPA routing with proper error handling..."
         
-        echo "✅ Deployment completed with timestamp: $TIMESTAMP"
+        # Создаем error.html как копию index.html для SPA routing
+        aws s3 cp dist/index.html s3://trackista-live/error.html \
+          --cache-control "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate" \
+          --expires "Thu, 01 Jan 1970 00:00:00 GMT" \
+          --metadata-directive REPLACE
+        
+        # Настраиваем S3 для SPA (Single Page Application)
+        aws s3 website s3://trackista-live --index-document index.html --error-document error.html
+        
+        # Дополнительно копируем index.html для всех возможных роутов
+        echo "📁 Setting up SPA routing fallbacks..."
+        aws s3 cp dist/index.html s3://trackista-live/density/index.html \
+          --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
+          --metadata-directive REPLACE
+        
+        aws s3 cp dist/index.html s3://trackista-live/charts/index.html \
+          --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
+          --metadata-directive REPLACE
+        
+        echo "✅ Deployment completed with SPA routing support. Timestamp: $TIMESTAMP"
