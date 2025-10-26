@@ -703,10 +703,10 @@ div[class*="col-"] .btn.rounded-pill,
     width: auto !important;
   }
   
-  /* Высота графиков на мобильных - меньше */
+  /* Высота графиков на мобильных - адаптивная */
   .density-chart-container {
-    height: 250px !important;
-    max-height: 250px !important;
+    min-height: 250px !important;
+    /* Убираем фиксированную высоту, чтобы она управлялась из компонента */
   }
   
   /* Прогресс-бары с отступами - МОБИЛЬНАЯ ВЕРСИЯ */

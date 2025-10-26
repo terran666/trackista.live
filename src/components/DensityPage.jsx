@@ -110,6 +110,16 @@ export default function DensityPage() {
     return filteredCoins.slice(0, 10);
   }, [allCoins]);
 
+  // Отладочная информация
+  console.log('Density Page Debug:', {
+    isCompactView,
+    loading,
+    error,
+    allCoinsLength: allCoins?.length || 0,
+    densityCoinsLength: densityCoins?.length || 0,
+    isSpot
+  });
+
   return (
     <div className="container-fluid p-lg-4 p-0 density-page pb-5">
       {/* Заголовок и управление */}
@@ -345,15 +355,7 @@ export default function DensityPage() {
                                       ))}
                                     </div>
                                     
-                                    {/* Кнопки торговли */}
-                                    <div className="btn-group btn-group-sm ms-2" role="group">
-                                      <button className="btn btn-outline-warning btn-sm" style={{ fontSize: '0.75rem', padding: '5px 10px' }}>
-                                        Futures
-                                      </button>
-                                      <button className="btn btn-outline-success btn-sm" style={{ fontSize: '0.75rem', padding: '5px 10px' }}>
-                                        Spot
-                                      </button>
-                                    </div>
+
                                   </div>
                                 </div>
                                 
