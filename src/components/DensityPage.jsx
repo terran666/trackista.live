@@ -280,13 +280,14 @@ export default function DensityPage() {
                                 </tbody>
                               </table>
                               
-                              {/* Вторая строка с оставшимися данными */}
+                              {/* Вторая строка с оставшимися данными - 4 колонки для выравнивания */}
                               <table className="table table-borderless table-sm mb-0 mt-2" style={{ fontSize: '0.8rem' }}>
                                 <thead>
                                   <tr>
-                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '33%' }} className="text-muted fw-bold">Время до</th>
-                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '33%' }} className="text-muted fw-bold">Жизнь</th>
-                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '34%' }} className="text-muted fw-bold">Активность</th>
+                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-bold">Время до</th>
+                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-bold">Жизнь</th>
+                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-bold">Активность</th>
+                                    <th style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-bold"></th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -294,6 +295,7 @@ export default function DensityPage() {
                                     <td style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">~45 мин</td>
                                     <td style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">2.5ч</td>
                                     <td style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">Высокая</td>
+                                    <td style={{ padding: '6px 4px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold"></td>
                                   </tr>
                                 </tbody>
                               </table>
