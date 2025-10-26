@@ -8,7 +8,10 @@ import DensityPage from './components/DensityPage';
 import CommunityPage from './components/CommunityPage';
 
 export default function App(){
-  const [currentPage, setCurrentPage] = useState('charts');
+  const [currentPage, setCurrentPage] = useState(() => {
+    // Восстанавливаем последнюю активную страницу из localStorage
+    return localStorage.getItem('trackista-current-page') || 'charts';
+  });
   
   // Функция для закрытия мобильного меню
   const closeMobileMenu = () => {
@@ -25,6 +28,8 @@ export default function App(){
   const handlePageChange = (page) => {
     console.log(`Переключение на страницу: ${page}`);
     setCurrentPage(page);
+    // Сохраняем текущую страницу в localStorage
+    localStorage.setItem('trackista-current-page', page);
     closeMobileMenu();
   };
   

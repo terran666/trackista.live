@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "proxy": "cd proxy-server && npm start"
+    "proxy": "cd proxy-server && npm start",
+    "deploy:prepare": "npm install && npm run build",
+    "deploy:check": "npm run build && npx serve dist"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.5",

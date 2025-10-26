@@ -59,6 +59,11 @@ html {
   transition: background-color 0.2s;
 }
 
+/* Поддержка Bootstrap rounded-pill */
+.btn.rounded-pill {
+  border-radius: 50rem !important;
+}
+
 .btn:hover {
   background: #3182ce;
 }
@@ -220,6 +225,54 @@ html {
     max-height: 35vh;
     min-height: 250px;
   }
+  
+  /* Убираем отступы на странице плотности для мобильных */
+  .density-page .container-fluid {
+    padding: 0 !important;
+  }
+  
+  .density-page .row {
+    margin: 0 !important;
+  }
+  
+  .density-page .col-12 {
+    padding: 0 !important;
+  }
+  
+  .density-page .card {
+    margin-bottom: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+  
+  .density-page .card-body {
+    padding: 0 !important;
+  }
+  
+  /* Убираем все отступы между элементами на мобильных */
+  .density-page .mb-3, 
+  .density-page .mb-4, 
+  .density-page .mb-lg-4, 
+  .density-page .mb-lg-3 {
+    margin-bottom: 0.25rem !important;
+  }
+  
+  /* Убираем отступы у таблиц */
+  .density-page .table {
+    margin-bottom: 0 !important;
+  }
+  
+  /* Заголовок более компактный */
+  .density-page .d-flex.justify-content-between {
+    padding: 8px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  /* Графики на всю ширину без отступов */
+  .density-page .density-chart-container {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 }
 
 /* Стили для навигации */
@@ -334,4 +387,175 @@ html {
   .table td {
     padding: 8px;
   }
+}
+
+/* Убираем все рамки и отступы у графиков KLineChart */
+.chart-container,
+.k-line-chart,
+.klinecharts-chart,
+[data-klinecharts] {
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+
+/* Убираем рамки у canvas элементов библиотеки klinecharts */
+.chart-container canvas,
+.k-line-chart canvas,
+.klinecharts-chart canvas,
+[data-klinecharts] canvas {
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+
+/* Убираем рамки у всех div элементов внутри графиков */
+.chart-container div,
+.k-line-chart div,
+.klinecharts-chart div,
+[data-klinecharts] div {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+
+/* Специальные стили для контейнеров графиков в плотности */
+.density-chart-container {
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  background: transparent !important;
+}
+
+.density-chart-container > div {
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+
+/* Полное отключение всех рамок для страницы плотности */
+.density-page .card,
+.density-page .card-body,
+.density-page .border-top,
+.density-page .border,
+.density-page .border-0 {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+
+/* Убираем все возможные рамки у Bootstrap компонентов */
+.card.border-0,
+.card-body,
+.border-top,
+.border,
+.row,
+.col-12,
+.col-lg-6 {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Агрессивное отключение всех рамок внутри контейнеров с графиками */
+div[class*="col-"] .card,
+div[class*="col-"] .card *:not(.btn),
+div[class*="col-"] .density-chart-container,
+div[class*="col-"] .density-chart-container *:not(.btn) {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+
+/* Исключение для кнопок - сохраняем их стили */
+div[class*="col-"] .btn.rounded-pill,
+.density-page .btn.rounded-pill {
+  border-radius: 50rem !important;
+}
+
+/* Точечное отключение рамок только для элементов графиков */
+.density-page div[class*="col-"] > div > div > div,
+.density-page .density-chart-container,
+.density-page .density-chart-container > *,
+.density-page .chart-container,
+.density-page .chart-container > * {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+}
+
+/* Принудительно нормальный размер шрифта для блока DOM стенки */
+.density-page .border.rounded {
+  font-size: 1rem !important;
+}
+
+.density-page .border.rounded * {
+  font-size: inherit !important;
+}
+
+/* Переопределяем мобильные правила для блока DOM стенки */
+@media (max-width: 768px) {
+  .density-page .border.rounded {
+    font-size: 0.95rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .density-page .border.rounded {
+    font-size: 0.9rem !important;
+  }
+  
+  /* Мобильные стили для кнопок на странице плотности */
+  .density-page .btn-sm {
+    font-size: 0.8rem !important;
+    padding: 6px 10px !important;
+  }
+  
+  /* Адаптивная таблица DOM данных */
+  .density-page .table {
+    font-size: 0.75rem !important;
+  }
+  
+  .density-page .table td {
+    padding: 2px 4px !important;
+    font-size: 0.7rem !important;
+  }
+  
+  /* Кнопки управления - перенос на новую строку если не помещаются */
+  .density-page .row.g-2 {
+    gap: 0.25rem !important;
+  }
+  
+  .density-page .btn-group {
+    flex-wrap: wrap;
+  }
+  
+  /* Высота графиков на мобильных */
+  .density-chart-container {
+    height: 280px !important;
+  }
+}
+
+/* Финальное правило для rounded-pill кнопок с максимальной специфичностью */
+.density-page .btn.rounded-pill,
+.density-page div[class*="col-"] .btn.rounded-pill,
+.btn.rounded-pill {
+  border-radius: 50rem !important;
+  border: 1px solid !important;
 }

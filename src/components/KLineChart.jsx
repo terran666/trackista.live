@@ -145,7 +145,7 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
       // Определяем, мобильное ли устройство
       const isMobile = window.innerWidth <= 768;
       
-      // Настройки графика с полностью отключенной сеткой
+      // Настройки графика с полностью отключенной сеткой и рамками
       const chartOptions = {
         grid: {
           show: false,
@@ -183,9 +183,9 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
               offsetTop: 8,
               offsetRight: 8,
               offsetBottom: 8,
-              borderRadius: 4,
-              borderSize: 1,
-              borderColor: '#3f4254',
+              borderRadius: 0,
+              borderSize: 0,
+              borderColor: 'transparent',
               color: '#D9D9D9'
             },
             text: {
@@ -310,6 +310,13 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
       // Принудительно отключаем сетку, рамки и tooltip после инициализации
       if (chart.current && chart.current.setStyles) {
         chart.current.setStyles({
+          // Отключаем рамки самого графика
+          separator: {
+            size: 0,
+            color: 'transparent',
+            fill: false,
+            activeBackgroundColor: 'transparent'
+          },
           grid: {
             show: false,
             horizontal: { show: false },
@@ -318,7 +325,16 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
           crosshair: {
             show: false,
             horizontal: { show: false, line: { show: false } },
-            vertical: { show: false, line: { show: false } }
+            vertical: { show: false, line: { show: false } },
+            // Компактные метки crosshair
+            yAxis: {
+              label: { 
+                size: 10, 
+                paddingLeft: 4, 
+                paddingRight: 4, 
+                borderRadius: 2 
+              }
+            }
           },
           candle: { 
             tooltip: { showRule: 'none' },
@@ -334,11 +350,49 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
             tickLine: { show: false }, // Убираем засечки оси X
             splitLine: { show: false } // Убираем разделители оси X
           },
+          // Компактная ось Y
           yAxis: {
             show: true,
+            width: 38, // Уменьшаем ширину оси с ~52-60 до 38
+            inside: false, // Ось снаружи графика
             axisLine: { show: false }, // Убираем линию оси Y
             tickLine: { show: false }, // Убираем засечки оси Y
-            splitLine: { show: false } // Убираем разделители оси Y
+            splitLine: { show: false }, // Убираем разделители оси Y
+            tickText: {
+              size: 10, // Меньший размер шрифта
+              marginStart: 0,
+              marginEnd: 0,
+              // Компактный форматтер цен - каждую вторую скрываем и сокращаем числа
+              formatter: (value, index) => {
+                if (index % 2) return ''; // Каждую вторую подпись скрываем
+                // Сокращаем большие числа
+                if (value >= 1e6) return (value/1e6).toFixed(2) + 'M';
+                if (value >= 1e3) return (value/1e3).toFixed(1) + 'K';
+                return value.toFixed(2);
+              }
+            }
+          },
+          // Компактная метка последней цены
+          priceMark: {
+            last: {
+              show: true,
+              label: { 
+                size: 10, 
+                paddingLeft: 4, 
+                paddingRight: 4, 
+                borderRadius: 2 
+              },
+              line: { show: true }
+            }
+          },
+          // Убираем отступы layout
+          layout: {
+            padding: { 
+              top: 0, 
+              right: 0, 
+              bottom: 0, 
+              left: 0 
+            }
           }
         });
       }
@@ -658,8 +712,8 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
             maxWidth: '100%',
             maxHeight: '100%',
             backgroundColor: '#fff',
-            border: '1px solid #e0e0e0',
-            borderRadius: '4px',
+            border: 'none',
+            borderRadius: '0',
             boxSizing: 'border-box',
             overflow: 'hidden'
           }}
@@ -825,8 +879,8 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
             minHeight: window.innerWidth <= 768 ? '350px' : 0,
             height: window.innerWidth <= 768 ? 'auto' : '100%',
             backgroundColor: '#fff',
-            border: '1px solid #dee2e6',
-            borderRadius: '8px',
+            border: 'none',
+            borderRadius: '0',
             display: 'block',
             overflow: 'hidden'
           }}
@@ -893,12 +947,17 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
       
       <div 
         ref={chartRef} 
+        className="chart-container"
         style={{ 
           width: '100%', 
           height: '500px',
           backgroundColor: '#fff',
-          border: '1px solid #dee2e6',
-          borderRadius: '8px'
+          border: 'none',
+          borderRadius: '0',
+          margin: 0,
+          padding: 0,
+          boxShadow: 'none',
+          outline: 'none'
         }}
       />
     </div>
