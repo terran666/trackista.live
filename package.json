@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "proxy": "cd proxy-server && npm start",
     "deploy:prepare": "npm install && npm run build",
-    "deploy:check": "npm run build && npx serve dist"
+    "deploy:check": "npm run build && npx serve dist",
+    "deploy:server": "npm run build && ./deploy-to-server.sh",
+    "deploy:server:win": "npm run build && deploy-to-server.bat"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.5",

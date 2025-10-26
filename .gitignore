@@ -26,3 +26,4 @@ desktop.ini
 .env.local
 .env.*.local
 .env
+.env.deploy
