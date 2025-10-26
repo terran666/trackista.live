@@ -9,6 +9,17 @@ import CommunityPage from './components/CommunityPage';
 
 export default function App(){
   const [currentPage, setCurrentPage] = useState(() => {
+    // Проверяем redirect path из error.html
+    const redirectPath = localStorage.getItem('trackista-redirect-path');
+    if (redirectPath) {
+      localStorage.removeItem('trackista-redirect-path');
+      const page = redirectPath.replace('/', '');
+      const validPages = ['charts', 'screener', 'density', 'community'];
+      if (validPages.includes(page)) {
+        return page;
+      }
+    }
+    
     // Сначала проверяем URL, затем localStorage
     const path = window.location.pathname.replace('/', '') || 'charts';
     const validPages = ['charts', 'screener', 'density', 'community'];

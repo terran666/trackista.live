@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting... - Trackista Live</title>
+    <script>
+        // Немедленное перенаправление на основной сайт с сохранением пути
+        const path = window.location.pathname;
+        if (path !== '/' && path !== '/index.html') {
+            // Сохраняем путь в localStorage для SPA роутинга
+            localStorage.setItem('trackista-redirect-path', path);
+        }
+        window.location.replace('/');
+    </script>
+</head>
+<body>
+    <p>Redirecting to main application...</p>
+</body>
+</html>
