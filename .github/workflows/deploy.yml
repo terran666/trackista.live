@@ -124,9 +124,17 @@ jobs:
           exit 1
         fi
         
-        # 4. Настраиваем S3 website configuration
-        echo "🌐 Configuring S3 website settings..."
-        aws s3 website s3://trackista-live --index-document index.html --error-document error.html
+        # 4. Настраиваем S3 website configuration с routing rules
+        echo "🌐 Configuring S3 website settings with routing rules..."
+        
+        # Создаем routing rules JSON для SPA
+        echo '{"IndexDocument":{"Suffix":"index.html"},"ErrorDocument":{"Key":"index.html"},"RoutingRules":[{"Condition":{"HttpErrorCodeReturnedEquals":"404"},"Redirect":{"ReplaceKeyWith":"index.html"}}]}' > routing-rules.json
+        
+        # Применяем website конфигурацию с routing rules
+        aws s3api put-bucket-website --bucket trackista-live --website-configuration file://routing-rules.json
+        
+        # Также устанавливаем простую website конфигурацию как fallback
+        aws s3 website s3://trackista-live --index-document index.html --error-document index.html
         
         # 5. Проверяем что все файлы загружены
         echo "🔍 Verifying uploaded files..."
