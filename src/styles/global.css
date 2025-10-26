@@ -755,3 +755,38 @@ div[class*="col-"] .btn.rounded-pill,
   border-radius: 50rem !important;
   border: 1px solid !important;
 }
+
+/* Дополнительные отступы для прогресс-баров плотности на всех устройствах */
+.density-page .progress {
+  margin-bottom: 1rem !important; /* Увеличиваем отступ снизу для всех устройств */
+}
+
+.density-page .progress:last-of-type {
+  margin-bottom: 1.5rem !important; /* Еще больше отступ для последнего прогресс-бара */
+}
+
+/* Убираем отступы для контейнера кнопок */
+.density-page .container-fluid {
+  margin-bottom: 0 !important; /* Убираем отступ снизу контейнера кнопок */
+  padding-bottom: 0 !important; /* Убираем внутренний отступ снизу */
+}
+
+/* Убираем отступы снизу для карточки с анализом */
+.density-page .border.rounded {
+  margin-bottom: 1rem !important; /* Минимальный отступ снизу всего блока анализа */
+  padding-bottom: 0.25rem !important; /* Еще меньше внутренний отступ снизу */
+}
+
+/* Убираем отступы у кнопок в нижней части блока */
+.density-page .btn-group,
+.density-page .btn-outline-info,
+.density-page .row.g-2 {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Убираем отступы у последнего row с кнопками */
+.density-page .container-fluid .row:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}

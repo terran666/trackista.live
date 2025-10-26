@@ -111,7 +111,7 @@ export default function DensityPage() {
   }, [allCoins]);
 
   return (
-    <div className="container-fluid p-lg-4 p-0 density-page">
+    <div className="container-fluid p-lg-4 p-0 density-page pb-5">
       {/* Заголовок и управление */}
       <div className="d-flex justify-content-between align-items-center mb-lg-4 mb-3 px-lg-4 px-2 px-sm-0">
         <div>
@@ -292,7 +292,7 @@ export default function DensityPage() {
                           </div>
                           
                           <div className="col-lg-12 col-12 mb-2">
-                            <div className="progress mb-2" style={{ height: '20px', position: 'relative' }}>
+                            <div className="progress mb-3" style={{ height: '20px', position: 'relative' }}>
                               <div 
                                 className="progress-bar bg-danger" 
                                 role="progressbar" 
@@ -303,7 +303,7 @@ export default function DensityPage() {
                               <span className="text-muted fw-bold position-absolute" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)' }}>Vol: 2.4M</span>
                             </div>
                             
-                            <div className="progress mb-3" style={{ height: '20px', position: 'relative' }}>
+                            <div className="progress mb-4" style={{ height: '20px', position: 'relative' }}>
                               <div 
                                 className="progress-bar bg-success" 
                                 role="progressbar" 
@@ -346,7 +346,7 @@ export default function DensityPage() {
                                   </div>
                                 </div>
                                 
-                                <div className="col-12 col-md-auto mt-2 mt-md-0">
+                                <div className="col-12 col-md-auto mt-md-0">
                                   {/* Кнопка слежения */}
                                   <div className="position-relative d-flex justify-content-end justify-content-md-start">
                                     <button 
