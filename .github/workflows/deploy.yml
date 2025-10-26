@@ -63,41 +63,58 @@ jobs:
           --expires "Thu, 01 Jan 1970 00:00:00 GMT" \
           --metadata-directive REPLACE
         
-        echo "🔧 Configuring S3 for SPA routing with proper error handling..."
+        echo "🔧 Configuring S3 for SPA routing with comprehensive setup..."
         
         # Проверяем, что файлы существуют
         echo "📋 Checking build files..."
         ls -la dist/
         
-        # Создаем error.html как копию index.html для SPA routing
         if [ -f "dist/index.html" ]; then
-          echo "✅ Found dist/index.html, setting up SPA routing..."
+          echo "✅ Found dist/index.html, setting up comprehensive SPA routing..."
           
-          # Копируем error.html для S3 website configuration
+          # 1. Создаем error.html для S3 website configuration
+          echo "📄 Creating error.html..."
           aws s3 cp dist/index.html s3://trackista-live/error.html \
             --cache-control "no-cache, no-store, must-revalidate, max-age=0, s-maxage=0, proxy-revalidate" \
             --expires "Thu, 01 Jan 1970 00:00:00 GMT" \
             --metadata-directive REPLACE
             
-          # Создаем директории и копируем index.html для каждого роута
-          echo "📁 Creating SPA route directories..."
+          # 2. Создаем файлы без расширения для прямых URL (как nginx try_files)
+          echo "� Creating direct route files..."
+          aws s3 cp dist/index.html s3://trackista-live/density \
+            --content-type "text/html" \
+            --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
+            --metadata-directive REPLACE
           
-          # Создаем папку density и копируем index.html
+          aws s3 cp dist/index.html s3://trackista-live/screener \
+            --content-type "text/html" \
+            --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
+            --metadata-directive REPLACE
+            
+          aws s3 cp dist/index.html s3://trackista-live/community \
+            --content-type "text/html" \
+            --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
+            --metadata-directive REPLACE
+            
+          aws s3 cp dist/index.html s3://trackista-live/charts \
+            --content-type "text/html" \
+            --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
+            --metadata-directive REPLACE
+          
+          # 3. Также создаем директории с index.html для полной совместимости
+          echo "📁 Creating directory-based routes..."
           aws s3 cp dist/index.html s3://trackista-live/density/index.html \
             --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
             --metadata-directive REPLACE
           
-          # Создаем папку screener и копируем index.html  
           aws s3 cp dist/index.html s3://trackista-live/screener/index.html \
             --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
             --metadata-directive REPLACE
             
-          # Создаем папку community и копируем index.html
           aws s3 cp dist/index.html s3://trackista-live/community/index.html \
             --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
             --metadata-directive REPLACE
             
-          # Создаем папку charts и копируем index.html (для полноты)
           aws s3 cp dist/index.html s3://trackista-live/charts/index.html \
             --cache-control "no-cache, no-store, must-revalidate, max-age=0" \
             --metadata-directive REPLACE
@@ -107,11 +124,15 @@ jobs:
           exit 1
         fi
         
-        # Настраиваем S3 website configuration
-        echo "🌐 Configuring S3 website..."
+        # 4. Настраиваем S3 website configuration
+        echo "🌐 Configuring S3 website settings..."
         aws s3 website s3://trackista-live --index-document index.html --error-document error.html
         
-        # Дополнительная проверка конфигурации
+        # 5. Проверяем что все файлы загружены
+        echo "🔍 Verifying uploaded files..."
+        aws s3 ls s3://trackista-live/ --human-readable
+        
+        # 6. Проверяем website конфигурацию
         echo "🔍 Verifying S3 website configuration..."
         aws s3api get-bucket-website --bucket trackista-live
         
