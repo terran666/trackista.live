@@ -5,12 +5,38 @@ import KLineChart from './KLineChart';
 
 export default function DensityPage() {
   // VERSION: mobile-spacing-fix-v27102025
-  const [isCompactView, setIsCompactView] = useState(true);
-  const [isSpot, setIsSpot] = useState(true);
-  const [coinIntervals, setCoinIntervals] = useState({});
-  const [showVolume, setShowVolume] = useState(false);
+  const [isCompactView, setIsCompactView] = useState(() => {
+    const saved = localStorage.getItem('density-compact-view');
+    return saved ? JSON.parse(saved) : true;
+  });
+  const [isSpot, setIsSpot] = useState(() => {
+    const saved = localStorage.getItem('density-is-spot');
+    return saved ? JSON.parse(saved) : true;
+  });
+  const [coinIntervals, setCoinIntervals] = useState(() => {
+    const saved = localStorage.getItem('density-coin-intervals');
+    return saved ? JSON.parse(saved) : {};
+  });
+  const [showVolume, setShowVolume] = useState(() => {
+    const saved = localStorage.getItem('density-show-volume');
+    return saved ? JSON.parse(saved) : false;
+  });
   const [watchedCoins, setWatchedCoins] = useState({});
   const [colorPopup, setColorPopup] = useState({ show: false, coinId: null });
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [excludedCoins, setExcludedCoins] = useState(() => {
+    const saved = localStorage.getItem('density-excluded-coins');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [coinToExclude, setCoinToExclude] = useState('');
+  const [showSavePopup, setShowSavePopup] = useState(false);
+  const [presetName, setPresetName] = useState('');
+  const [presetToDelete, setPresetToDelete] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [savedPresets, setSavedPresets] = useState(() => {
+    const saved = localStorage.getItem('density-presets');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   // Доступные цвета для селекции
   const watchColors = [
@@ -41,6 +67,55 @@ export default function DensityPage() {
     setColorPopup({ show: false, coinId: null });
   };
 
+  // Функция для добавления монеты в исключения
+  const addExcludedCoin = () => {
+    if (coinToExclude.trim() && !excludedCoins.includes(coinToExclude.trim().toUpperCase())) {
+      setExcludedCoins(prev => [...prev, coinToExclude.trim().toUpperCase()]);
+      setCoinToExclude('');
+    }
+  };
+
+  // Функция для удаления монеты из исключений
+  const removeExcludedCoin = (coin) => {
+    setExcludedCoins(prev => prev.filter(c => c !== coin));
+  };
+
+  // Функция для сохранения пресета
+  const savePreset = () => {
+    if (presetName.trim() && !savedPresets.find(p => p.name === presetName.trim())) {
+      const newPreset = {
+        name: presetName.trim(),
+        settings: {
+          isCompactView,
+          isSpot,
+          showVolume,
+          excludedCoins
+        }
+      };
+      const updatedPresets = [...savedPresets, newPreset];
+      setSavedPresets(updatedPresets);
+      localStorage.setItem('density-presets', JSON.stringify(updatedPresets));
+      setPresetName('');
+    }
+  };
+
+  // Функция для подтверждения удаления пресета
+  const confirmDeletePreset = (preset) => {
+    setPresetToDelete(preset);
+    setShowDeleteConfirm(true);
+  };
+
+  // Функция для удаления пресета
+  const deletePreset = () => {
+    if (presetToDelete) {
+      const updatedPresets = savedPresets.filter(p => p.name !== presetToDelete.name);
+      setSavedPresets(updatedPresets);
+      localStorage.setItem('density-presets', JSON.stringify(updatedPresets));
+      setPresetToDelete(null);
+      setShowDeleteConfirm(false);
+    }
+  };
+
   // Закрытие попапа при клике вне его
   React.useEffect(() => {
     const handleClickOutside = (event) => {
@@ -53,6 +128,32 @@ export default function DensityPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [colorPopup.show]);
 
+  // Сохранение исключенных монет в localStorage
+  React.useEffect(() => {
+    localStorage.setItem('density-excluded-coins', JSON.stringify(excludedCoins));
+  }, [excludedCoins]);
+
+  // Сохранение настроек в localStorage
+  React.useEffect(() => {
+    localStorage.setItem('density-compact-view', JSON.stringify(isCompactView));
+  }, [isCompactView]);
+
+  React.useEffect(() => {
+    localStorage.setItem('density-is-spot', JSON.stringify(isSpot));
+  }, [isSpot]);
+
+  React.useEffect(() => {
+    localStorage.setItem('density-coin-intervals', JSON.stringify(coinIntervals));
+  }, [coinIntervals]);
+
+  React.useEffect(() => {
+    localStorage.setItem('density-show-volume', JSON.stringify(showVolume));
+  }, [showVolume]);
+
+  React.useEffect(() => {
+    localStorage.setItem('density-presets', JSON.stringify(savedPresets));
+  }, [savedPresets]);
+
   // Доступные таймфреймы
   const timeframes = [
     { value: '1m', label: '1м' },
@@ -63,10 +164,6 @@ export default function DensityPage() {
     { value: '4h', label: '4ч' },
     { value: '1d', label: '1д' }
   ];
-
-  const toggleCompactView = () => {
-    setIsCompactView(!isCompactView);
-  };
 
   const toggleMarketType = (spot) => {
     setIsSpot(spot);
@@ -128,34 +225,25 @@ export default function DensityPage() {
         </div>
         
         {/* Управление */}
-        <div className="d-flex gap-2">
-          {/* Кнопки спот/фьючерсы */}
-          <div className="btn-group btn-group-sm" role="group">
+        <div className="d-flex gap-2 flex-wrap">
+          {/* Сохраненные пресеты */}
+          {savedPresets.map((preset, index) => (
             <button
+              key={index}
               type="button"
-              className={`btn ${isSpot ? 'btn-success' : 'btn-outline-success'}`}
-              onClick={() => toggleMarketType(true)}
+              className="btn btn-sm btn-outline-info"
+              onClick={() => {
+                // Применяем настройки пресета
+                setIsCompactView(preset.settings.isCompactView);
+                setIsSpot(preset.settings.isSpot);
+                setShowVolume(preset.settings.showVolume);
+                setExcludedCoins(preset.settings.excludedCoins);
+              }}
+              title={`Применить пресет: ${preset.name}`}
             >
-              Спот
+              {preset.name}
             </button>
-            <button
-              type="button"
-              className={`btn ${!isSpot ? 'btn-warning' : 'btn-outline-warning'}`}
-              onClick={() => toggleMarketType(false)}
-            >
-              Фьючерсы
-            </button>
-          </div>
-          
-          {/* Кнопка компактного вида */}
-          <button
-            type="button"
-            className={`btn btn-sm ${isCompactView ? 'btn-primary' : 'btn-outline-secondary'}`}
-            onClick={toggleCompactView}
-            title={isCompactView ? 'Обычный вид (1 в ряд)' : 'Компактный вид (2 в ряд)'}
-          >
-            ═
-          </button>
+          ))}
           
           {/* Кнопка перезагрузки страницы */}
           <button
@@ -171,7 +259,7 @@ export default function DensityPage() {
           <button
             type="button"
             className="btn btn-sm btn-outline-dark"
-            onClick={() => console.log('Открыть настройки')}
+            onClick={() => setShowSettingsModal(true)}
             title="Настройки анализа плотности"
           >
             ⚙️
@@ -436,6 +524,290 @@ export default function DensityPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Модальное окно настроек */}
+      {showSettingsModal && (
+        <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)', overflowX: 'hidden' }}>
+          <div className="modal-dialog modal-dialog-scrollable" style={{ maxWidth: '95vw', width: '95vw', margin: '1rem auto', overflowX: 'hidden' }}>
+            <div className="modal-content" style={{ overflowX: 'hidden', maxWidth: '100%' }}>
+              <div className="modal-header">
+                <h5 className="modal-title">Настройки анализа плотности</h5>
+                <button 
+                  type="button" 
+                  className="btn-close" 
+                  onClick={() => setShowSettingsModal(false)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div>
+                  <div className="row g-3">
+                    <div className="col-md-6">
+                      <div className="mb-3">
+                        <div className="d-flex flex-column flex-md-row gap-2">
+                          <input 
+                            type="text" 
+                            className="form-control flex-grow-1" 
+                            placeholder="Введите имя настройки..."
+                            value={presetName}
+                            onChange={(e) => setPresetName(e.target.value)}
+                          />
+                          <button 
+                            className="btn btn-outline-success flex-shrink-0 w-100 w-md-auto" 
+                            type="button"
+                            onClick={savePreset}
+                            style={{ maxWidth: '200px' }}
+                          >
+                            Применить
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Сохраненные пресеты */}
+                      {savedPresets.length > 0 && (
+                        <div className="mb-3">
+                          <label className="form-label">Сохраненные настройки</label>
+                          <div className="d-flex flex-wrap gap-2">
+                            {savedPresets.map((preset, index) => (
+                              <button
+                                key={index}
+                                type="button"
+                                className="btn btn-sm btn-outline-primary"
+                                onClick={() => confirmDeletePreset(preset)}
+                                title={`Удалить настройки: ${preset.name}`}
+                              >
+                                {preset.name}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <h6>Параметры анализа</h6>
+                      <div className="mb-3">
+                        <label className="form-label">Капитализация монеты (млн USD)</label>
+                        <div className="row">
+                          <div className="col-6">
+                            <label className="form-label small">От</label>
+                            <input type="number" className="form-control" defaultValue="1" min="0" step="0.1" />
+                          </div>
+                          <div className="col-6">
+                            <label className="form-label small">До</label>
+                            <input type="number" className="form-control" defaultValue="10" min="0" step="0.1" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mb-3">
+                        <label className="form-label">Минимальный объем (стенки)</label>
+                        <input type="number" className="form-control" defaultValue="1000" min="1000" step="1000" placeholder="от 1 тыс" />
+                      </div>
+                      
+                      {/* Тип рынка */}
+                      <div className="mb-3">
+                        <label className="form-label">Тип рынка</label>
+                        <div>
+                          <button
+                            type="button"
+                            className={`btn ${isSpot ? 'btn-success' : 'btn-outline-success'} me-2`}
+                            onClick={() => setIsSpot(true)}
+                          >
+                            Спот
+                          </button>
+                          <button
+                            type="button"
+                            className={`btn ${!isSpot ? 'btn-warning' : 'btn-outline-warning'}`}
+                            onClick={() => setIsSpot(false)}
+                          >
+                            Фьючерсы
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <h6>Отображение</h6>
+                      <div className="form-check mb-3">
+                        <input 
+                          className="form-check-input" 
+                          type="checkbox" 
+                          id="showVolume"
+                          checked={showVolume} 
+                          onChange={(e) => setShowVolume(e.target.checked)}
+                        />
+                        <label className="form-check-label" htmlFor="showVolume">
+                          Показывать объемы на графиках
+                        </label>
+                      </div>
+                      <div className="form-check mb-3">
+                        <input 
+                          className="form-check-input" 
+                          type="checkbox" 
+                          id="compactView"
+                          checked={isCompactView} 
+                          onChange={(e) => setIsCompactView(e.target.checked)}
+                        />
+                        <label className="form-check-label" htmlFor="compactView">
+                          Компактный вид (2 графика в ряд)
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-12">
+                      <h6>Дополнительные настройки</h6>
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <div className="mb-3">
+                            <label className="form-label">Сигнал подход до цели за (%)</label>
+                            <input type="number" className="form-control" defaultValue="5" min="1" max="50" step="0.1" />
+                          </div>
+                          <div className="mb-3">
+                            <label className="form-label">Исключение монет</label>
+                            <div className="d-flex flex-column flex-md-row gap-2">
+                              <input 
+                                type="text" 
+                                className="form-control flex-grow-1" 
+                                placeholder="Начните вводить название монeты..."
+                                list="coinsList"
+                                value={coinToExclude}
+                                onChange={(e) => setCoinToExclude(e.target.value)}
+                              />
+                              <button 
+                                className="btn btn-outline-primary flex-shrink-0 w-100 w-md-auto" 
+                                type="button"
+                                onClick={addExcludedCoin}
+                                style={{ maxWidth: '200px' }}
+                              >
+                                Применить
+                              </button>
+                            </div>
+                            <datalist id="coinsList">
+                              <option value="BTC">Bitcoin</option>
+                              <option value="ETH">Ethereum</option>
+                              <option value="BNB">Binance Coin</option>
+                              <option value="ADA">Cardano</option>
+                              <option value="SOL">Solana</option>
+                              <option value="DOT">Polkadot</option>
+                              <option value="MATIC">Polygon</option>
+                              <option value="AVAX">Avalanche</option>
+                            </datalist>
+                            
+                            {/* Бейджи с исключенными монетами */}
+                            {excludedCoins.length > 0 && (
+                              <div className="mt-2">
+                                {excludedCoins.map((coin, index) => (
+                                  <span key={index} className="badge bg-danger me-2 mb-1">
+                                    {coin}
+                                    <button 
+                                      type="button" 
+                                      className="btn-close btn-close-white ms-2" 
+                                      style={{ fontSize: '0.6em' }}
+                                      onClick={() => removeExcludedCoin(coin)}
+                                      aria-label="Удалить"
+                                    ></button>
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            
+                            <small className="form-text text-muted">Введите символ монеты для исключения из анализа</small>
+                          </div>
+                        </div>
+                        <div className="col-sm-6">
+                          <div className="mb-3">
+                            <label className="form-label">Сигнал примерное время до</label>
+                            <input type="number" className="form-control" defaultValue="30" min="5" max="300" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => setShowSettingsModal(false)}
+                >
+                  Отмена
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-primary"
+                  onClick={() => {
+                    // Сохраняем настройки и показываем попап
+                    console.log('Настройки сохранены');
+                    setShowSettingsModal(false);
+                    setShowSavePopup(true);
+                    // Автоматически скрываем попап через 3 секунды
+                    setTimeout(() => setShowSavePopup(false), 3000);
+                  }}
+                >
+                  Сохранить
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Попап подтверждения сохранения */}
+      {showSavePopup && (
+        <div className="position-fixed top-50 start-50 translate-middle" style={{ zIndex: 9999 }}>
+          <div className="alert alert-success alert-dismissible fade show shadow-lg" role="alert">
+            <i className="bi bi-check-circle-fill me-2"></i>
+            <strong>Настройки сохранены!</strong> Изменения применены успешно.
+            <button 
+              type="button" 
+              className="btn-close" 
+              onClick={() => setShowSavePopup(false)}
+              aria-label="Close"
+            ></button>
+          </div>
+        </div>
+      )}
+
+      {/* Диалог подтверждения удаления пресета */}
+      {showDeleteConfirm && (
+        <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-sm">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Удалить пресет</h5>
+                <button 
+                  type="button" 
+                  className="btn-close" 
+                  onClick={() => {
+                    setShowDeleteConfirm(false);
+                    setPresetToDelete(null);
+                  }}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <p>Вы уверены, что хотите удалить пресет <strong>"{presetToDelete?.name}"</strong>?</p>
+              </div>
+              <div className="modal-footer">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => {
+                    setShowDeleteConfirm(false);
+                    setPresetToDelete(null);
+                  }}
+                >
+                  Нет
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-danger"
+                  onClick={deletePreset}
+                >
+                  Да
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
