@@ -203,7 +203,7 @@ export default function DensityPage() {
           {densityCoins.map((coin, index) => (
             <div key={coin.id} className={isCompactView ? "col-12 col-lg-6" : "col-12"}>
               <div className="card" style={{ border: '1px solid rgba(0, 0, 0, 0.1)', borderRadius: '0.75rem', boxShadow: 'none', outline: 'none', backgroundColor: '#ffffff', margin: '12px 0', overflow: 'hidden' }}>
-                <div className="card-body p-0" style={{ border: 'none', boxShadow: 'none', outline: 'none' }}>
+                <div className="card-body p-0" style={{ border: 'none', boxShadow: 'none', outline: 'none', paddingLeft: '0', paddingRight: '0' }}>
                   {/* График сверху */}
                   <div className="density-chart-container position-relative" style={{ height: isCompactView ? '350px' : '450px', margin: 0, padding: 0, borderRadius: 0, border: 'none', boxShadow: 'none', outline: 'none' }}>
                     {/* Название тикера поверх графика */}
@@ -233,12 +233,12 @@ export default function DensityPage() {
                   
                   {/* Блок анализа DOM стенок под графиком */}
                   <div style={{ border: 'none' }}>
-                    <div style={{ paddingTop: '0.5rem', paddingBottom: '0.5rem', paddingLeft: '0', paddingRight: '0' }}>
+                    <div style={{ paddingTop: '0.5rem', paddingBottom: '0.5rem', paddingLeft: '0', paddingRight: '0', marginLeft: '0', marginRight: '0' }}>
                       
 
 
                       {/* Блок данных по DOM стенке */}
-                      <div className="rounded p-3" style={{ fontSize: '1.1rem', backgroundColor: '#ffffff', border: 'none', borderRadius: '0', boxShadow: 'none', margin: '0' }}>
+                      <div className="rounded p-3" style={{ fontSize: '1.3rem', backgroundColor: '#ffffff', border: 'none', borderRadius: '0', boxShadow: 'none', margin: '0' }}>
                         <div className="row g-2">
 
                           
@@ -271,41 +271,41 @@ export default function DensityPage() {
                             
                             {/* Горизонтальная таблица для мобильных - названия сверху, данные снизу */}
                             <div className="d-block d-md-none">
-                              <table className="table table-borderless table-sm mb-0" style={{ fontSize: '0.9rem' }}>
+                              <table className="table table-borderless table-sm mb-0" style={{ fontSize: '1.0rem' }}>
                                 <thead>
                                   <tr>
-                                    <th style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bold">Стенка</th>
-                                    <th style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bold">На цене</th>
-                                    <th style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bold">До цены</th>
-                                    <th style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bold">Съедание</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">Стенка</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">На цене</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">До цены</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">Съедание</th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-dark fw-bold">300т</td>
-                                    <td style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-dark fw-bold">2000</td>
-                                    <td style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-danger fw-bold">+2.5%</td>
-                                    <td style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">~12 мин</td>
+                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-dark fw-bold">300т</td>
+                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-dark fw-bold">2000</td>
+                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-danger fw-bold">+2.5%</td>
+                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">~12 мин</td>
                                   </tr>
                                 </tbody>
                               </table>
                               
                               {/* Вторая строка с оставшимися данными - 4 колонки для выравнивания */}
-                              <table className="table table-borderless table-sm mb-0 mt-2" style={{ fontSize: '0.9rem' }}>
+                              <table className="table table-borderless table-sm mb-0 mt-2" style={{ fontSize: '1.0rem' }}>
                                 <thead>
                                   <tr>
-                                    <th style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bold">Время до</th>
-                                    <th style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bold">Жизнь</th>
-                                    <th style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bold">Активность</th>
-                                    <th style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bold"></th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">Время до</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">Жизнь</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">Активность</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder"></th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">~45 мин</td>
-                                    <td style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">2.5ч</td>
-                                    <td style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">Высокая</td>
-                                    <td style={{ padding: '8px 0px', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold"></td>
+                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">~45 мин</td>
+                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">2.5ч</td>
+                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">Высокая</td>
+                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold"></td>
                                   </tr>
                                 </tbody>
                               </table>

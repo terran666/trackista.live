@@ -691,7 +691,7 @@ div[class*="col-"] .btn.rounded-pill,
 
 @media (max-width: 576px) {
   .density-page .border.rounded {
-    font-size: 1rem !important;
+    font-size: 1.3rem !important;
   }
   
   /* Адаптивная таблица DOM данных - увеличенный шрифт */
@@ -716,18 +716,19 @@ div[class*="col-"] .btn.rounded-pill,
   }
   
   .density-page .d-block.d-md-none .table td {
-    font-size: 0.9rem !important;
-    padding: 8px 0px !important; /* Полностью убираем боковые отступы */
+    font-size: 1.0rem !important;
+    font-weight: bold !important;
+    padding: 0 !important; /* Полностью убираем все отступы */
     width: auto !important;
     text-align: left !important;
   }
   
   /* Выделяем заголовки в мобильной таблице */
   .density-page .d-block.d-md-none .table th {
-    font-size: 0.95rem !important;
-    font-weight: 800 !important;
-    color: #212529 !important;
-    padding: 8px 0px !important; /* Полностью убираем боковые отступы */
+    font-size: 1.1rem !important;
+    font-weight: 900 !important;
+    color: #000000 !important;
+    padding: 0 !important; /* Полностью убираем все отступы */
     text-align: left !important;
   }
   
@@ -913,16 +914,17 @@ div[class*="col-"] .btn.rounded-pill,
   }
   
   .screener1-page .d-md-none .table td {
-    padding: 8px 0px !important;
-    font-size: 0.9rem !important;
+    padding: 0 !important;
+    font-size: 1.0rem !important;
+    font-weight: bold !important;
     text-align: left !important;
   }
   
   .screener1-page .d-md-none .table th {
-    font-size: 0.95rem !important;
-    font-weight: 800 !important;
-    color: #212529 !important;
-    padding: 8px 0px !important;
+    font-size: 1.1rem !important;
+    font-weight: 900 !important;
+    color: #000000 !important;
+    padding: 0 !important;
     text-align: left !important;
   }
   
@@ -948,13 +950,39 @@ div[class*="col-"] .btn.rounded-pill,
   .density-page .d-md-none table th[style*="padding"],
   .screener1-page .d-md-none table td[style*="padding"],
   .screener1-page .d-md-none table th[style*="padding"] {
-    padding: 8px 0px !important;
+    padding: 0 !important;
   }
   
   .density-page .d-md-none table th[style*="padding"],
   .screener1-page .d-md-none table th[style*="padding"] {
-    font-weight: 800 !important;
-    color: #212529 !important;
+    font-weight: 900 !important;
+    color: #000000 !important;
+  }
+  
+  /* Принудительное убирание всех боковых отступов для мобильной версии */
+  .density-page .card-body,
+  .density-page .p-1,
+  .density-page .p-2,
+  .density-page .p-3,
+  .screener1-page .card-body,
+  .screener1-page .p-1,
+  .screener1-page .p-2,
+  .screener1-page .p-3 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  /* Убираем боковые отступы у всех контейнеров */
+  .density-page .container-fluid,
+  .density-page div[class*="col-"],
+  .screener1-page .container-fluid,
+  .screener1-page div[class*="col-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 }
 
