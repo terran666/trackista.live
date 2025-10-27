@@ -202,7 +202,7 @@ export default function DensityPage() {
         <div className={`row ${isCompactView ? 'g-lg-3 g-0' : 'g-0 g-md-3'}`}>
           {densityCoins.map((coin, index) => (
             <div key={coin.id} className={isCompactView ? "col-12 col-lg-6" : "col-12"}>
-              <div className="card border-0" style={{ borderRadius: 0, border: 'none', boxShadow: 'none', outline: 'none' }}>
+              <div className="card" style={{ border: '1px solid rgba(0, 0, 0, 0.1)', borderRadius: '0.75rem', boxShadow: 'none', outline: 'none', backgroundColor: '#ffffff', margin: '12px 0', overflow: 'hidden' }}>
                 <div className="card-body p-0 px-md-3" style={{ border: 'none', boxShadow: 'none', outline: 'none' }}>
                   {/* График сверху */}
                   <div className="density-chart-container position-relative" style={{ height: isCompactView ? '350px' : '450px', margin: 0, padding: 0, borderRadius: 0, border: 'none', boxShadow: 'none', outline: 'none' }}>
@@ -232,13 +232,13 @@ export default function DensityPage() {
                   </div>
                   
                   {/* Блок анализа DOM стенок под графиком */}
-                  <div style={{ border: 'none', borderTop: 'none' }}>
+                  <div style={{ border: 'none' }}>
                     <div className={isCompactView ? "p-1" : "p-2"} style={{ paddingTop: '0.5rem', paddingBottom: '0.5rem' }}>
                       
 
 
                       {/* Блок данных по DOM стенке */}
-                      <div className="border rounded p-3" style={{ backgroundColor: '#f8f9fa', fontSize: '1.1rem' }}>
+                      <div className="rounded p-3" style={{ fontSize: '1.1rem', backgroundColor: '#ffffff', border: 'none', borderRadius: '0', boxShadow: 'none', margin: '0' }}>
                         <div className="row g-2">
 
                           
@@ -313,7 +313,7 @@ export default function DensityPage() {
                           </div>
                           
                           <div className="col-lg-12 col-12 mb-2">
-                            <div className="progress mb-3" style={{ height: '20px', position: 'relative' }}>
+                            <div className="progress mb-2 mt-2" style={{ height: '20px', position: 'relative' }}>
                               <div 
                                 className="progress-bar bg-danger" 
                                 role="progressbar" 
@@ -324,7 +324,7 @@ export default function DensityPage() {
                               <span className="text-muted fw-bold position-absolute" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)' }}>Vol: 2.4M</span>
                             </div>
                             
-                            <div className="progress mb-4" style={{ height: '20px', position: 'relative' }}>
+                            <div className="progress mb-3 mt-2" style={{ height: '20px', position: 'relative' }}>
                               <div 
                                 className="progress-bar bg-success" 
                                 role="progressbar" 
@@ -336,7 +336,7 @@ export default function DensityPage() {
                             </div>
                             
                             {/* Кнопки управления в Bootstrap контейнере */}
-                            <div className="container-fluid px-0">
+                            <div className="container-fluid px-0 mt-3 mb-2">
                               <div className="row g-2 align-items-center justify-content-between">
                                 <div className="col-12 col-md-auto">
                                   <div className="d-flex flex-wrap gap-1 align-items-center">

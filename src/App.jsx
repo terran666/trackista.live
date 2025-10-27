@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.css';
 import logo from './components/img/logo.png';
 import ScreenerPage from './components/ScreenerPage';
+import ScreenerPage1 from './components/ScreenerPage1';
 import ChartPage from './components/ChartPage';
 import DensityPage from './components/DensityPage';
 import CommunityPage from './components/CommunityPage';
@@ -14,7 +15,7 @@ export default function App(){
     if (redirectPath) {
       localStorage.removeItem('trackista-redirect-path');
       const page = redirectPath.replace('/', '');
-      const validPages = ['charts', 'screener', 'density', 'community'];
+      const validPages = ['charts', 'screener', 'screener1', 'density', 'community'];
       if (validPages.includes(page)) {
         return page;
       }
@@ -22,7 +23,7 @@ export default function App(){
     
     // Сначала проверяем URL, затем localStorage
     const path = window.location.pathname.replace('/', '') || 'charts';
-    const validPages = ['charts', 'screener', 'density', 'community'];
+    const validPages = ['charts', 'screener', 'screener1', 'density', 'community'];
     const pageFromUrl = validPages.includes(path) ? path : null;
     
     return pageFromUrl || localStorage.getItem('trackista-current-page') || 'charts';
@@ -32,7 +33,7 @@ export default function App(){
   useEffect(() => {
     const handlePopState = () => {
       const path = window.location.pathname.replace('/', '') || 'charts';
-      const validPages = ['charts', 'screener', 'density', 'community'];
+      const validPages = ['charts', 'screener', 'screener1', 'density', 'community'];
       if (validPages.includes(path)) {
         setCurrentPage(path);
         localStorage.setItem('trackista-current-page', path);
@@ -137,6 +138,14 @@ export default function App(){
               </li>
               <li className="nav-item">
                 <button 
+                  className={`nav-link btn btn-link text-decoration-none ${currentPage === 'screener1' ? 'active text-warning' : 'text-white'}`}
+                  onClick={() => handlePageChange('screener1')}
+                >
+                  Скринер1
+                </button>
+              </li>
+              <li className="nav-item">
+                <button 
                   className={`nav-link btn btn-link text-decoration-none ${currentPage === 'density' ? 'active text-warning' : 'text-white'}`}
                   onClick={() => handlePageChange('density')}
                 >
@@ -181,6 +190,14 @@ export default function App(){
               </li>
               <li className="nav-item">
                 <button 
+                  className={`nav-link btn btn-link text-decoration-none ${currentPage === 'screener1' ? 'active text-warning' : 'text-white'}`}
+                  onClick={() => handlePageChange('screener1')}
+                >
+                  🔎 Скринер1
+                </button>
+              </li>
+              <li className="nav-item">
+                <button 
                   className={`nav-link btn btn-link text-decoration-none ${currentPage === 'density' ? 'active text-warning' : 'text-white'}`}
                   onClick={() => handlePageChange('density')}
                 >
@@ -203,6 +220,7 @@ export default function App(){
       <div style={{ paddingTop: '80px' }}>
         {currentPage === 'charts' && <ChartPage />}
         {currentPage === 'screener' && <ScreenerPage />}
+        {currentPage === 'screener1' && <ScreenerPage1 />}
         {currentPage === 'density' && <DensityPage />}
         {currentPage === 'community' && <CommunityPage />}
         {currentPage === 'signals' && <CommunityPage />}

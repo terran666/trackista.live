@@ -1,3 +1,8 @@
+/* Переопределяем Bootstrap переменные для белого фона */
+:root {
+  --bs-body-bg: #ffffff !important;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -8,7 +13,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  background-color: #f5f7fa;
+  background-color: #ffffff;
   color: #2d3748;
   line-height: 1.5;
   overflow-x: hidden; /* Убираем горизонтальный скролл */
@@ -16,6 +21,7 @@ body {
 }
 
 html {
+  background-color: #ffffff;
   overflow-x: hidden; /* Убираем горизонтальный скролл на уровне html */
   max-width: 100vw;
 }
@@ -105,19 +111,23 @@ html {
 }
 
 .table th {
-  background: #f7fafc;
+  background: #ffffff;
   font-weight: 600;
   color: #4a5568;
   cursor: pointer;
   user-select: none;
 }
 
-.table th:hover {
-  background: #edf2f7;
-}
-
+/* Убираем эффекты наведения для таблиц в density и screener */
+.density-page .table th:hover,
+.screener1-page .table th:hover,
+.density-page .table tr:hover,
+.screener1-page .table tr:hover,
+.table th:hover,
 .table tr:hover {
-  background: #f7fafc;
+  background: #ffffff !important;
+  color: inherit !important;
+  cursor: default !important;
 }
 
 .positive {
@@ -156,8 +166,9 @@ html {
 }
 
 .error {
-  background: #fed7d7;
+  background: #ffffff;
   color: #c53030;
+  border: 1px solid #c53030;
   padding: 12px;
   border-radius: 6px;
   margin: 20px 0;
@@ -589,16 +600,13 @@ html {
 .card-body,
 .border-top,
 .border,
-.row,
-.col-12,
-.col-lg-6 {
+.row {
   border: none !important;
   box-shadow: none !important;
   outline: none !important;
 }
 
 /* Агрессивное отключение всех рамок внутри контейнеров с графиками */
-div[class*="col-"] .card,
 div[class*="col-"] .card *:not(.btn),
 div[class*="col-"] .density-chart-container,
 div[class*="col-"] .density-chart-container *:not(.btn) {
@@ -789,4 +797,211 @@ div[class*="col-"] .btn.rounded-pill,
 .density-page .container-fluid .row:last-child {
   margin-bottom: 0 !important;
   padding-bottom: 0 !important;
+}
+
+/* Принудительно белый фон для блоков анализа в скринере */
+.screener1-page .border.rounded {
+  background-color: #ffffff !important;
+}
+
+/* Принудительно белый фон для всех блоков анализа */
+.screener1-page .border,
+.screener1-page .card,
+.screener1-page .card-body {
+  background-color: #ffffff !important;
+}
+
+/* Улучшенные отступы для прогресс-баров */
+.density-page .progress,
+.screener1-page .progress {
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+/* Улучшенные отступы для контейнеров с кнопками */
+.density-page .container-fluid.mt-3,
+.screener1-page .container-fluid.mt-3 {
+  margin-top: 1rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* Улучшенные отступы для групп кнопок */
+.density-page .btn-group,
+.screener1-page .btn-group {
+  margin-bottom: 0.25rem !important;
+}
+
+/* Дополнительные отступы для кнопок Watch */
+.density-page .btn-outline-info,
+.screener1-page .btn-outline-info {
+  margin-top: 0.25rem !important;
+}
+
+/* Мобильные отступы для прогресс-баров */
+@media (max-width: 768px) {
+  .density-page .progress,
+  .screener1-page .progress {
+    margin-top: 0.4rem !important;
+    margin-bottom: 0.6rem !important;
+  }
+  
+  .density-page .container-fluid.mt-3,
+  .screener1-page .container-fluid.mt-3 {
+    margin-top: 0.8rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+}
+
+/* Четкая рамка для блоков анализа - ОТКЛЮЧЕНО */
+/*
+.density-page .rounded,
+.screener1-page .rounded {
+  border: 3px solid #495057 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: none !important;
+  transition: none !important;
+  background-color: #ffffff !important;
+  margin: 8px !important;
+  padding: 12px !important;
+}
+*/
+
+/* Дополнительные стили для блоков анализа */
+.density-page .rounded:not(.progress):not(.btn),
+.screener1-page .rounded:not(.progress):not(.btn) {
+  background-color: #ffffff !important;
+  color: #212529 !important;
+}
+
+/* Специфичные правила для блоков анализа */
+.density-page .rounded.p-3,
+.screener1-page .rounded.p-3 {
+  border: 3px solid #495057 !important;
+  border-radius: 0.5rem !important;
+  margin: 8px !important;
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+/* Специальный класс для блоков анализа */
+.analysis-block,
+.density-page .analysis-block,
+.screener1-page .analysis-block {
+  border: 3px solid #495057 !important;
+  border-radius: 0.5rem !important;
+  margin: 8px !important;
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+  padding: 12px !important;
+  outline: none !important;
+}
+
+/* Дополнительная специфичность для Bootstrap override */
+div.analysis-block.rounded.p-3 {
+  border: 3px solid #495057 !important;
+  border-radius: 0.5rem !important;
+  margin: 8px !important;
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+/* Стили для карточек в density-page и screener1-page */
+.density-page .card, 
+.screener1-page .card {
+  border: 1px solid #adb5bd !important;
+  border-radius: 0rem !important;
+}
+
+/* Четкая рамка для всех border элементов */
+.density-page .border,
+.screener1-page .border {
+  border: 3px solid #6c757d !important;
+}
+
+/* Специальный стиль для блоков с данными */
+.density-page .row .rounded,
+.screener1-page .row .rounded {
+  border: 3px solid #6c757d !important;
+  background-color: #ffffff !important;
+  box-shadow: none !important;
+  margin: 8px !important;
+  padding: 12px !important;
+}
+
+/* Четкая обводка для контейнеров графиков */
+.density-page .density-chart-container,
+.screener1-page .density-chart-container {
+  border: 2px solid #e9ecef !important;
+  border-radius: 0.5rem !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  background-color: #ffffff !important;
+}
+
+/* Четкая обводка для всех карточек полностью */
+.density-page .card,
+.screener1-page .card {
+  border: 1px solid rgba(173, 181, 189, 0.5) !important;
+  border-radius: 0rem !important;
+  box-shadow: none !important;
+  transition: none !important;
+  background-color: #ffffff !important;
+  margin: 12px 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Убираем обводку у содержимого карточки */
+.density-page .card-body,
+.screener1-page .card-body {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Убираем все возможные тени */
+.density-page .card-body,
+.screener1-page .card-body,
+.density-page .border-0,
+.screener1-page .border-0 {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Четкая обводка для прогресс-баров */
+.density-page .progress,
+.screener1-page .progress {
+  border: 1px solid #dee2e6 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  background-color: #f8f9fa !important;
+}
+
+/* Прогресс-бары с обводкой */
+.density-page .progress-bar,
+.screener1-page .progress-bar {
+  border-radius: 0.5rem !important;
+}
+
+/* Простые кнопки с четкой обводкой, БЕЗ эффектов наведения */
+.density-page .btn,
+.screener1-page .btn {
+  border-width: 1px !important;
+  border-style: solid !important;
+  box-shadow: none !important;
+  transition: none !important;
+}
+
+/* ПОЛНОСТЬЮ убираем все эффекты наведения для кнопок */
+.density-page .btn:hover,
+.screener1-page .btn:hover,
+.density-page .btn:focus,
+.screener1-page .btn:focus,
+.density-page .btn:active,
+.screener1-page .btn:active {
+  box-shadow: none !important;
+  transform: none !important;
+  border-width: 1px !important;
+  border-style: solid !important;
 }
