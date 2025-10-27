@@ -471,41 +471,65 @@ export default function DensityPage() {
                                     
                                     {/* Попап выбора цвета */}
                                     {colorPopup.show && colorPopup.coinId === coin.id && (
-                                      <div className="position-absolute bg-white border rounded shadow-lg p-2" style={{ 
-                                        top: '100%', 
-                                        right: '0', 
-                                        zIndex: 999,
-                                        marginTop: '4px',
-                                        minWidth: '150px'
+                                      <div className="position-fixed card shadow-lg border-dark border-2" style={{ 
+                                        top: '50%', 
+                                        left: '50%', 
+                                        transform: 'translate(-50%, -50%)',
+                                        zIndex: 99999,
+                                        minWidth: '280px',
+                                        maxWidth: '90vw'
                                       }}>
-                                        <div className="mb-2">
-                                          <small className="text-muted fw-bold">Выберите цвет:</small>
+                                        <div className="card-body p-3">
+                                        <div className="d-flex justify-content-between align-items-center mb-3">
+                                          <h6 className="mb-0 text-dark">
+                                            <i className="bi bi-palette me-2"></i>
+                                            Выберите цвет
+                                          </h6>
+                                          <button 
+                                            type="button" 
+                                            className="btn-close" 
+                                            onClick={() => setColorPopup({ show: false, coinId: null })}
+                                            aria-label="Закрыть"
+                                          ></button>
                                         </div>
-                                        <div className="d-flex flex-wrap gap-2 mb-2">
+                                        <div className="d-flex justify-content-between flex-wrap gap-2 mb-3">
                                           {watchColors.map((color, idx) => (
-                                            <div
+                                            <button
                                               key={idx}
-                                              className="border"
+                                              type="button"
+                                              className="btn btn-outline-dark border-2 rounded-circle p-0 shadow-sm"
                                               title={color.name}
                                               style={{ 
-                                                width: '25px', 
-                                                height: '25px', 
+                                                width: '40px', 
+                                                height: '40px', 
                                                 backgroundColor: color.value,
-                                                cursor: 'pointer',
-                                                borderRadius: '4px'
+                                                borderColor: '#333',
+                                                transition: 'all 0.2s ease-in-out'
                                               }}
                                               onClick={() => setWatchColor(coin.id, color)}
-                                            ></div>
+                                              onMouseEnter={(e) => {
+                                                e.currentTarget.classList.add('shadow');
+                                                e.currentTarget.style.transform = 'scale(1.1)';
+                                              }}
+                                              onMouseLeave={(e) => {
+                                                e.currentTarget.classList.remove('shadow');
+                                                e.currentTarget.style.transform = 'scale(1)';
+                                              }}
+                                            ></button>
                                           ))}
                                         </div>
                                         {watchedCoins[coin.id] && (
-                                          <button 
-                                            className="btn btn-sm btn-outline-secondary w-100"
-                                            onClick={() => removeWatch(coin.id)}
-                                          >
-                                            Убрать метку
-                                          </button>
+                                          <div className="mt-3 border-top pt-3">
+                                            <button 
+                                              className="btn btn-sm btn-outline-danger w-100"
+                                              onClick={() => removeWatch(coin.id)}
+                                            >
+                                              <i className="bi bi-trash me-1"></i>
+                                              Убрать метку
+                                            </button>
+                                          </div>
                                         )}
+                                        </div>
                                       </div>
                                     )}
                                   </div>

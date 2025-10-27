@@ -1272,4 +1272,73 @@ div.analysis-block.rounded.p-3 {
     padding-left: 0.5rem !important;
     padding-right: 0.5rem !important;
   }
+  
+  /* Обеспечиваем высокий z-index для попапа выбора цвета */
+  .density-page .position-absolute.bg-white.border.rounded.shadow-lg {
+    z-index: 99999 !important;
+    position: absolute !important;
+  }
+}
+
+/* Глобальное правило для попапа выбора цвета - всегда поверх всего */
+.position-absolute.bg-white.border.rounded.shadow-lg[style*="zIndex"] {
+  z-index: 99999 !important;
+  position: absolute !important;
+}
+
+/* Дополнительное правило для попапов внутри карточек */
+.card .position-absolute.bg-white.border.rounded.shadow-lg {
+  z-index: 99999 !important;
+}
+
+/* Bootstrap модальное окно выбора цвета */
+.modal[style*="99999"] {
+  z-index: 99999 !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.modal[style*="99999"] .modal-dialog {
+  z-index: 100000 !important;
+}
+
+/* Цветные кнопки в Bootstrap модальном окне */
+.modal .btn.rounded-circle {
+  transition: all 0.2s ease !important;
+  border-width: 2px !important;
+}
+
+.modal .btn.rounded-circle:hover {
+  transform: scale(1.15) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+  border-color: #000 !important;
+}
+
+/* Заголовок модального окна выбора цвета */
+.modal .modal-header .bi-palette {
+  color: #6f42c1;
+}
+
+/* Bootstrap стили для попапа выбора цвета */
+.position-fixed.card {
+  backdrop-filter: blur(5px);
+}
+
+.position-fixed.card .btn.rounded-circle {
+  transition: all 0.2s ease-in-out !important;
+  border-width: 2px !important;
+}
+
+.position-fixed.card .btn.rounded-circle:hover {
+  transform: scale(1.1) !important;
+  border-color: #000 !important;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.3) !important;
+}
+
+.position-fixed.card .btn.rounded-circle:active {
+  transform: scale(0.95) !important;
+}
+
+/* Иконка палитры в попапе */
+.position-fixed .bi-palette {
+  color: #6f42c1 !important;
 }
