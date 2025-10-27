@@ -723,11 +723,11 @@ div[class*="col-"] .btn.rounded-pill,
     text-align: left !important;
   }
   
-  /* Выделяем заголовки в мобильной таблице */
+  /* Заголовки тонкие для экономии места в мобильной таблице */
   .density-page .d-block.d-md-none .table th {
-    font-size: 1.1rem !important;
-    font-weight: 900 !important;
-    color: #000000 !important;
+    font-size: 0.85rem !important;
+    font-weight: 400 !important;
+    color: #6c757d !important;
     padding: 0 !important; /* Полностью убираем все отступы */
     text-align: left !important;
   }
@@ -921,9 +921,9 @@ div[class*="col-"] .btn.rounded-pill,
   }
   
   .screener1-page .d-md-none .table th {
-    font-size: 1.1rem !important;
-    font-weight: 900 !important;
-    color: #000000 !important;
+    font-size: 0.85rem !important;
+    font-weight: 400 !important;
+    color: #6c757d !important;
     padding: 0 !important;
     text-align: left !important;
   }
@@ -955,8 +955,8 @@ div[class*="col-"] .btn.rounded-pill,
   
   .density-page .d-md-none table th[style*="padding"],
   .screener1-page .d-md-none table th[style*="padding"] {
-    font-weight: 900 !important;
-    color: #000000 !important;
+    font-weight: 400 !important;
+    color: #6c757d !important;
   }
   
   /* Принудительное убирание всех боковых отступов для мобильной версии */
@@ -1059,7 +1059,7 @@ div.analysis-block.rounded.p-3 {
   background-color: #ffffff !important;
   box-shadow: none !important;
   margin: 8px !important;
-  padding: 12px !important;
+  padding: 0 !important;
 }
 
 /* Четкая обводка для контейнеров графиков */

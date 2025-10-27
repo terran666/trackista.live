@@ -274,10 +274,10 @@ export default function DensityPage() {
                               <table className="table table-borderless table-sm mb-0" style={{ fontSize: '1.0rem' }}>
                                 <thead>
                                   <tr>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">Стенка</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">На цене</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">До цены</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">Съедание</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">Стенка</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">На цене</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">До цены</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">Съедание</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -294,10 +294,10 @@ export default function DensityPage() {
                               <table className="table table-borderless table-sm mb-0 mt-2" style={{ fontSize: '1.0rem' }}>
                                 <thead>
                                   <tr>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">Время до</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">Жизнь</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder">Активность</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-dark fw-bolder"></th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">Время до</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">Жизнь</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">Активность</th>
+                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal"></th>
                                   </tr>
                                 </thead>
                                 <tbody>
