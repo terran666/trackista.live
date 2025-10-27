@@ -703,11 +703,18 @@ div[class*="col-"] .btn.rounded-pill,
   
   .density-page .table td,
   .density-page .table th {
-    padding: 4px 2px !important;
+    padding: 4px 8px !important;
     font-size: 0.85rem !important;
     line-height: 1.1 !important;
-    border: none !important;
+    border: 1px solid #dee2e6 !important;
     vertical-align: middle !important;
+  }
+  
+  /* Десктопная таблица с рамками */
+  .density-page .d-none.d-md-block .table td,
+  .density-page .d-none.d-md-block .table th {
+    border: 1px solid #dee2e6 !important;
+    padding: 6px 8px !important;
   }
   
   /* Мобильная компактная таблица - увеличенный шрифт */
@@ -718,9 +725,10 @@ div[class*="col-"] .btn.rounded-pill,
   .density-page .d-block.d-md-none .table td {
     font-size: 1.0rem !important;
     font-weight: bold !important;
-    padding: 0 !important; /* Полностью убираем все отступы */
+    padding: 4px !important;
     width: auto !important;
     text-align: left !important;
+    border: 1px solid #dee2e6 !important;
   }
   
   /* Заголовки тонкие для экономии места в мобильной таблице */
@@ -728,8 +736,9 @@ div[class*="col-"] .btn.rounded-pill,
     font-size: 0.85rem !important;
     font-weight: 400 !important;
     color: #6c757d !important;
-    padding: 0 !important; /* Полностью убираем все отступы */
+    padding: 4px !important;
     text-align: left !important;
+    border: 1px solid #dee2e6 !important;
   }
   
   /* Высота графиков на мобильных - адаптивная */
@@ -950,7 +959,8 @@ div[class*="col-"] .btn.rounded-pill,
   .density-page .d-md-none table th[style*="padding"],
   .screener1-page .d-md-none table td[style*="padding"],
   .screener1-page .d-md-none table th[style*="padding"] {
-    padding: 0 !important;
+    padding: 4px !important;
+    border: 1px solid #dee2e6 !important;
   }
   
   .density-page .d-md-none table th[style*="padding"],

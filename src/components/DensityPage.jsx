@@ -274,18 +274,18 @@ export default function DensityPage() {
                               <table className="table table-borderless table-sm mb-0" style={{ fontSize: '1.0rem' }}>
                                 <thead>
                                   <tr>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">Стенка</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">На цене</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">До цены</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">Съедание</th>
+                                    <th style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6', width: '25%' }} className="text-muted fw-normal">Стенка</th>
+                                    <th style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6', width: '25%' }} className="text-muted fw-normal">На цене</th>
+                                    <th style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6', width: '25%' }} className="text-muted fw-normal">До цены</th>
+                                    <th style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6', width: '25%' }} className="text-muted fw-normal">Съедание</th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-dark fw-bold">300т</td>
-                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-dark fw-bold">2000</td>
-                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="text-danger fw-bold">+2.5%</td>
-                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">~12 мин</td>
+                                    <td style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="text-dark fw-bold">300т</td>
+                                    <td style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="text-dark fw-bold">2000</td>
+                                    <td style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="text-danger fw-bold">+2.5%</td>
+                                    <td style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="fw-bold">~12 мин</td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -294,18 +294,18 @@ export default function DensityPage() {
                               <table className="table table-borderless table-sm mb-0 mt-2" style={{ fontSize: '1.0rem' }}>
                                 <thead>
                                   <tr>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">Время до</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">Жизнь</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal">Активность</th>
-                                    <th style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none', width: '25%' }} className="text-muted fw-normal"></th>
+                                    <th style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6', width: '25%' }} className="text-muted fw-normal">Время до</th>
+                                    <th style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6', width: '25%' }} className="text-muted fw-normal">Жизнь</th>
+                                    <th style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6', width: '25%' }} className="text-muted fw-normal">Активность</th>
+                                    <th style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6', width: '25%' }} className="text-muted fw-normal"></th>
                                   </tr>
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">~45 мин</td>
-                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">2.5ч</td>
-                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold">Высокая</td>
-                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: 'none' }} className="fw-bold"></td>
+                                    <td style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="fw-bold">~45 мин</td>
+                                    <td style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="fw-bold">2.5ч</td>
+                                    <td style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="fw-bold">Высокая</td>
+                                    <td style={{ padding: '4px', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="fw-bold"></td>
                                   </tr>
                                 </tbody>
                               </table>
