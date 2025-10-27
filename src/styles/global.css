@@ -443,6 +443,16 @@ html {
     padding: 0.25rem 1rem !important;
   }
   
+  /* Скрываем скроллбар в мобильной навигации */
+  .overflow-auto::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .overflow-auto {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
   /* Компактное меню */
   .navbar-nav {
     text-align: left;
@@ -681,34 +691,44 @@ div[class*="col-"] .btn.rounded-pill,
 
 @media (max-width: 576px) {
   .density-page .border.rounded {
-    font-size: 0.9rem !important;
+    font-size: 1rem !important;
   }
   
-  /* Адаптивная таблица DOM данных - ЭКСТРА компактная */
+  /* Адаптивная таблица DOM данных - увеличенный шрифт */
   .density-page .table {
-    font-size: 0.65rem !important;
+    font-size: 0.85rem !important;
     margin: 0 !important;
     width: 100% !important;
   }
   
   .density-page .table td,
   .density-page .table th {
-    padding: 1px 2px !important;
-    font-size: 0.6rem !important;
+    padding: 4px 2px !important;
+    font-size: 0.85rem !important;
     line-height: 1.1 !important;
     border: none !important;
     vertical-align: middle !important;
   }
   
-  /* Мобильная компактная таблица */
+  /* Мобильная компактная таблица - увеличенный шрифт */
   .density-page .d-block.d-md-none .table {
-    margin-bottom: 3px !important; /* Отступ снизу таблицы */
+    margin-bottom: 3px !important;
   }
   
   .density-page .d-block.d-md-none .table td {
-    font-size: 0.55rem !important;
-    padding: 1px 2px !important; /* Небольшие отступы в ячейках */
+    font-size: 0.9rem !important;
+    padding: 8px 0px !important; /* Полностью убираем боковые отступы */
     width: auto !important;
+    text-align: left !important;
+  }
+  
+  /* Выделяем заголовки в мобильной таблице */
+  .density-page .d-block.d-md-none .table th {
+    font-size: 0.95rem !important;
+    font-weight: 800 !important;
+    color: #212529 !important;
+    padding: 8px 0px !important; /* Полностью убираем боковые отступы */
+    text-align: left !important;
   }
   
   /* Высота графиков на мобильных - адаптивная */
@@ -738,8 +758,38 @@ div[class*="col-"] .btn.rounded-pill,
   
   /* Кнопки следить компактнее */
   .density-page .btn-outline-info {
-    font-size: 0.6rem !important;
-    padding: 2px 6px !important;
+    font-size: 0.8rem !important;
+    padding: 6px 8px !important;
+    margin: 0 !important;
+  }
+  
+  /* Кнопки таймфреймов без боковых отступов */
+  .density-page .btn-group .btn {
+    font-size: 0.85rem !important;
+    padding: 6px 8px !important;
+    margin: 0 1px !important;
+  }
+  
+  /* Контейнеры кнопок без боковых отступов */
+  .density-page .container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Card-body без отступов на мобильных */
+  .density-page .card-body,
+  .screener1-page .card-body {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Все контейнеры без боковых отступов */
+  .density-page .p-1,
+  .density-page .p-2,
+  .screener1-page .p-1,
+  .screener1-page .p-2 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
   
   /* Позиционирование попапа цветов */
@@ -849,6 +899,62 @@ div[class*="col-"] .btn.rounded-pill,
   .screener1-page .container-fluid.mt-3 {
     margin-top: 0.8rem !important;
     margin-bottom: 0.4rem !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* Дополнительные мобильные стили для screener1 */
+@media (max-width: 576px) {
+  .screener1-page .table td,
+  .screener1-page .table th {
+    padding: 4px 2px !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .screener1-page .d-md-none .table td {
+    padding: 8px 0px !important;
+    font-size: 0.9rem !important;
+    text-align: left !important;
+  }
+  
+  .screener1-page .d-md-none .table th {
+    font-size: 0.95rem !important;
+    font-weight: 800 !important;
+    color: #212529 !important;
+    padding: 8px 0px !important;
+    text-align: left !important;
+  }
+  
+  .screener1-page .btn-outline-info {
+    font-size: 0.8rem !important;
+    padding: 6px 8px !important;
+    margin: 0 !important;
+  }
+  
+  .screener1-page .btn-group .btn {
+    font-size: 0.85rem !important;
+    padding: 6px 8px !important;
+    margin: 0 1px !important;
+  }
+  
+  .screener1-page .container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* Принудительное переопределение inline стилей для мобильных таблиц */
+  .density-page .d-md-none table td[style*="padding"],
+  .density-page .d-md-none table th[style*="padding"],
+  .screener1-page .d-md-none table td[style*="padding"],
+  .screener1-page .d-md-none table th[style*="padding"] {
+    padding: 8px 0px !important;
+  }
+  
+  .density-page .d-md-none table th[style*="padding"],
+  .screener1-page .d-md-none table th[style*="padding"] {
+    font-weight: 800 !important;
+    color: #212529 !important;
   }
 }
 
