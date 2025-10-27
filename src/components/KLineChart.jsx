@@ -52,6 +52,34 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
     }
   };
 
+  // Функции для управления масштабом цены на мобильных
+  const handlePriceZoomIn = () => {
+    if (chart.current) {
+      try {
+        // Сброс к авто-масштабу - сжимает цену
+        chart.current.adjustVisibleRange();
+        console.log('🔍 Сжатие масштаба цены (авто-подгонка)');
+      } catch (error) {
+        console.warn('Не удалось сжать масштаб цены:', error);
+      }
+    }
+  };
+
+  const handlePriceZoomOut = () => {
+    if (chart.current) {
+      try {
+        // Принудительная прокрутка к концу данных для "разжатия" вида
+        chart.current.scrollToRealTime();
+        setTimeout(() => {
+          chart.current.adjustVisibleRange();
+        }, 100);
+        console.log('🔍 Разжатие масштаба цены');
+      } catch (error) {
+        console.warn('Не удалось разжать масштаб цены:', error);
+      }
+    }
+  };
+
   // Функция для принудительного обновления данных и прокрутки
   const handleRefresh = async () => {
     try {
@@ -292,19 +320,33 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
         // 1. Сжимаем бары для отображения большего количества свечей
         chart.current.setBarSpace(4); // Меньше значение = больше свечей на экране
         
-        // 2. Убираем пустоту справа
-        chart.current.setOffsetRightDistance(5); // Минимальный отступ справа
-        chart.current.setMaxOffsetRightDistance(10); // Ограничиваем максимальный отступ
+        // 2. Делаем нормальный отступ справа от последней свечи до оси цены
+        chart.current.setOffsetRightDistance(30); // Увеличиваем отступ для красоты
+        chart.current.setMaxOffsetRightDistance(120); // Верхний предел
         
-        // 3. Гарантируем минимум видимых свечей
+        // 3. Включаем зум для мобильных устройств
+        chart.current.setZoomEnabled(true); // Горизонтальный зум (сжимать/разжимать время)
+        
+        // 4. Гарантируем минимум видимых свечей
         if (chart.current.setRightMinVisibleBarCount) {
           chart.current.setRightMinVisibleBarCount(120);
         }
         
-        // 4. Слегка отдаляем для большего обзора
+        // 5. Слегка отдаляем для большего обзора
         if (chart.current.zoomAtCoordinate) {
           chart.current.zoomAtCoordinate(0.85); // Отдаляем для большего количества свечей
         }
+        
+        // 6. Настраиваем ось цены для экономии места
+        chart.current.setStyles({
+          yAxis: {
+            width: 54, // Чуть уже ось цены
+            tickText: { 
+              margin: 2, 
+              size: 10 
+            }
+          }
+        });
       }
       
       // Принудительно отключаем сетку, рамки и tooltip после инициализации
@@ -515,6 +557,12 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
       // Прокручиваем к последнему бару после загрузки данных
       setTimeout(() => {
         scrollToLastBar();
+        // Добавляем больший отступ слева через прокрутку назад
+        setTimeout(() => {
+          if (chart.current && chart.current.scrollByDistance) {
+            chart.current.scrollByDistance(-35); // Увеличиваем отступ до 35px назад
+          }
+        }, 100);
       }, 50);
       
       // Добавляем среднюю линию, если включена
@@ -867,6 +915,38 @@ const KLineChart = ({ symbol, interval = '1m', spot = true, compact = false, sho
                   '🔄'
                 )}
               </button>
+              
+              {/* Кнопки управления масштабом цены - только на мобильных */}
+              {window.innerWidth <= 768 && (
+                <div className="btn-group btn-group-sm" role="group" aria-label="Масштаб цены">
+                  <button
+                    type="button"
+                    className="btn btn-outline-info btn-sm"
+                    onClick={handlePriceZoomIn}
+                    title="Сжать масштаб цены (автоподгонка)"
+                    style={{ 
+                      minWidth: '32px',
+                      fontSize: '12px',
+                      padding: '4px 6px'
+                    }}
+                  >
+                    ⬇
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-info btn-sm"
+                    onClick={handlePriceZoomOut}
+                    title="Разжать масштаб цены"
+                    style={{ 
+                      minWidth: '32px',
+                      fontSize: '12px',
+                      padding: '4px 6px'
+                    }}
+                  >
+                    ⬆
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -218,14 +218,14 @@ export default function DensityPage() {
   });
 
   return (
-    <div className="container-fluid p-lg-4 p-0 density-page pb-5">
+    <div className="container-fluid p-lg-4 p-0 density-page pb-5" style={{ maxWidth: '100vw', overflow: 'hidden', boxSizing: 'border-box' }}>
       {/* Заголовок и управление */}
-      <div className="d-flex justify-content-between align-items-center mb-lg-4 mb-3 px-lg-4 px-2 px-sm-0">
+      <div className="d-flex justify-content-between align-items-center mb-lg-4 mb-3 px-lg-4 px-2 px-sm-0" style={{ maxWidth: '100vw', overflow: 'hidden', boxSizing: 'border-box' }}>
         <div>
         </div>
         
         {/* Управление */}
-        <div className="d-flex gap-2 flex-wrap">
+        <div className="d-flex gap-2 flex-wrap" style={{ maxWidth: '80vw', overflow: 'hidden', boxSizing: 'border-box' }}>
           {/* Сохраненные пресеты */}
           {savedPresets.map((preset, index) => (
             <button
