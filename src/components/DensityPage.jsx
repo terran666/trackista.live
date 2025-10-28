@@ -433,7 +433,7 @@ export default function DensityPage() {
 
 
                       {/* Блок данных по DOM стенке */}
-                      <div className="rounded" style={{ fontSize: '1.3rem', backgroundColor: '#ffffff', border: 'none', borderRadius: '0', boxShadow: 'none', margin: '0', padding: '0' }}>
+                      <div className="rounded" style={{ fontSize: '1.3rem', backgroundColor: '#ffffff', border: 'none', borderRadius: '0', boxShadow: 'none', margin: '0', padding: '0', fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
                         <div className="row g-0">
 
                           
@@ -508,26 +508,26 @@ export default function DensityPage() {
                           </div>
                           
                           <div className="col-lg-12 col-12">
-                            <div className="progress" style={{ height: '20px', position: 'relative', margin: '0' }}>
+                            <div className="progress" style={{ height: '20px', position: 'relative', margin: '0', fontFamily: 'inherit' }}>
                               <div 
                                 className="progress-bar bg-danger" 
                                 role="progressbar" 
                                 style={{ width: '25%' }}
                               >
-                                <span className="text-white fw-bold">25%</span>
+                                <span className="text-white fw-bold" style={{ fontFamily: 'inherit' }}>25%</span>
                               </div>
-                              <span className="text-muted fw-bold position-absolute" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)' }}>Vol: 2.4M</span>
+                              <span className="text-muted fw-bold position-absolute" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)', fontFamily: 'inherit' }}>Vol: 2.4M</span>
                             </div>
                             
-                            <div className="progress" style={{ height: '20px', position: 'relative', margin: '0', marginTop: '1px' }}>
+                            <div className="progress" style={{ height: '20px', position: 'relative', margin: '0', marginTop: '1px', fontFamily: 'inherit' }}>
                               <div 
                                 className="progress-bar bg-primary" 
                                 role="progressbar" 
                                 style={{ width: '72%' }}
                               >
-                                <span className="text-white fw-bold">72%</span>
+                                <span className="text-white fw-bold" style={{ fontFamily: 'inherit' }}>72%</span>
                               </div>
-                              <span className="text-muted fw-bold position-absolute" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)' }}>Вероятность пробоя</span>
+                              <span className="text-muted fw-bold position-absolute" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)', fontFamily: 'inherit' }}>Вероятность пробоя</span>
                             </div>
                             
 
