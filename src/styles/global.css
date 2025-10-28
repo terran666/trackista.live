@@ -1636,12 +1636,11 @@ div.analysis-block.rounded.p-3 {
   
   /* Кнопки таймфреймов в блоке плотности */
   .density-page .btn-group[aria-label="Таймфреймы"] .btn {
-    font-size: 0.65rem !important;
-    padding: 3px 4px !important;
+    font-size: 0.875rem !important;
+    padding: 0.375rem 0.75rem !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
     min-width: auto !important;
-    max-width: 32px !important;
     /* Убираем border-radius - button group кнопки должны быть слитными */
     border-radius: 0 !important;
   }
@@ -1674,10 +1673,9 @@ div.analysis-block.rounded.p-3 {
 
 /* Дополнительная оптимизация для очень узких экранов */
 @media (max-width: 360px) {
-  /* Еще более компактные таймфреймы для маленьких экранов */
-  .density-page .btn-group[aria-label="Таймфреймы"] .btn {
-    font-size: 0.6rem !important;
-    padding: 2px 3px !important;
-    max-width: 28px !important;
+  /* Таймфреймы остаются нормального размера, но добавляем горизонтальную прокрутку при необходимости */
+  .density-page .btn-group[aria-label="Таймфреймы"] {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
   }
 }
