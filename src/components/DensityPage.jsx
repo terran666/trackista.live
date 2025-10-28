@@ -33,9 +33,48 @@ export default function DensityPage() {
   const [presetName, setPresetName] = useState('');
   const [presetToDelete, setPresetToDelete] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [presetToEdit, setPresetToEdit] = useState(null);
+  const [editPresetName, setEditPresetName] = useState('');
   const [savedPresets, setSavedPresets] = useState(() => {
     const saved = localStorage.getItem('density-presets');
-    return saved ? JSON.parse(saved) : [];
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    
+    // Пресеты по умолчанию для первой загрузки
+    const defaultPresets = [
+      {
+        name: 'стенки до 450т',
+        settings: {
+          isCompactView: false,
+          isSpot: true,
+          showVolume: true,
+          excludedCoins: []
+        }
+      },
+      {
+        name: 'фьючерсы компакт',
+        settings: {
+          isCompactView: true,
+          isSpot: false,
+          showVolume: false,
+          excludedCoins: []
+        }
+      },
+      {
+        name: 'спот полный',
+        settings: {
+          isCompactView: false,
+          isSpot: true,
+          showVolume: true,
+          excludedCoins: ['USDC', 'DAI', 'BUSD']
+        }
+      }
+    ];
+    
+    // Сохраняем пресеты по умолчанию в localStorage
+    localStorage.setItem('density-presets', JSON.stringify(defaultPresets));
+    return defaultPresets;
   });
 
   // Доступные цвета для селекции
@@ -48,6 +87,29 @@ export default function DensityPage() {
     { name: 'Оранжевый', value: '#fd7e14', bg: 'bg-secondary' }
   ];
   
+  // Функция для получения тикера для отображения на кнопке
+  const getTickerForButton = (coin) => {
+    if (!coin || !coin.symbol) {
+      return '?';
+    }
+    
+    let ticker = coin.symbol;
+    
+    if (ticker.endsWith('USDT')) {
+      ticker = ticker.replace('USDT', '');
+    } else if (ticker.endsWith('ETH')) {
+      ticker = ticker.replace('ETH', '');
+    }
+    
+    // Если результат пустой, возвращаем оригинальный символ или первые 3-4 буквы
+    if (!ticker || ticker.length === 0) {
+      return coin.symbol.substring(0, 4);
+    }
+    
+    // Ограничиваем длину тикера для отображения в кнопке
+    return ticker.length > 4 ? ticker.substring(0, 4) : ticker;
+  };
+
   // Функция для установки цвета монеты
   const setWatchColor = (coinId, color) => {
     setWatchedCoins(prev => ({
@@ -105,6 +167,21 @@ export default function DensityPage() {
     setShowDeleteConfirm(true);
   };
 
+  // Функция для обновления названия пресета
+  const updatePresetName = () => {
+    if (presetToEdit && editPresetName.trim()) {
+      const updatedPresets = savedPresets.map(p => 
+        p.name === presetToEdit.name 
+          ? { ...p, name: editPresetName.trim() }
+          : p
+      );
+      setSavedPresets(updatedPresets);
+      localStorage.setItem('density-presets', JSON.stringify(updatedPresets));
+      setPresetToEdit(null);
+      setEditPresetName('');
+    }
+  };
+
   // Функция для удаления пресета
   const deletePreset = () => {
     if (presetToDelete) {
@@ -153,6 +230,19 @@ export default function DensityPage() {
   React.useEffect(() => {
     localStorage.setItem('density-presets', JSON.stringify(savedPresets));
   }, [savedPresets]);
+
+  // Автоматическое переименование старого пресета
+  React.useEffect(() => {
+    const presetToUpdate = savedPresets.find(p => p.name === '300 тыш ло 500');
+    if (presetToUpdate) {
+      const updatedPresets = savedPresets.map(p => 
+        p.name === '300 тыш ло 500' 
+          ? { ...p, name: 'стенки до 450т' }
+          : p
+      );
+      setSavedPresets(updatedPresets);
+    }
+  }, []); // Выполняется только при монтировании
 
   // Доступные таймфреймы
   const timeframes = [
@@ -220,18 +310,29 @@ export default function DensityPage() {
   return (
     <div className="container-fluid p-0 density-page">
       {/* Заголовок и управление */}
-      <div className="d-flex justify-content-between align-items-center mb-lg-4 mb-3 px-lg-4 px-2 px-sm-0">
-        <div>
-        </div>
-        
-        {/* Управление */}
+      <div className="d-flex justify-content-between align-items-center mb-lg-4 mb-3 px-0">
+        {/* Левая сторона - пресеты и кнопка создания */}
         <div className="d-flex gap-2 flex-wrap">
+          {/* Кнопка создания пресета */}
+          <button
+            type="button"
+            className="btn btn-lg"
+            onClick={() => setShowSettingsModal(true)}
+            title="Создать новый пресет настроек"
+            style={{
+              fontSize: '1.4rem',
+              padding: '0.75rem 1.5rem'
+            }}
+          >
+            Создать пресет
+          </button>
+          
           {/* Сохраненные пресеты */}
           {savedPresets.map((preset, index) => (
             <button
               key={index}
               type="button"
-              className="btn btn-sm btn-outline-info"
+              className="btn btn-lg"
               onClick={() => {
                 // Применяем настройки пресета
                 setIsCompactView(preset.settings.isCompactView);
@@ -240,29 +341,35 @@ export default function DensityPage() {
                 setExcludedCoins(preset.settings.excludedCoins);
               }}
               title={`Применить пресет: ${preset.name}`}
+              style={{
+                fontSize: '1.4rem',
+                padding: '0.75rem 1.5rem'
+              }}
             >
               {preset.name}
             </button>
           ))}
-          
+        </div>
+        
+        {/* Правая сторона - кнопка перезагрузки */}
+        <div>
           {/* Кнопка перезагрузки страницы */}
           <button
             type="button"
-            className="btn btn-sm btn-outline-primary"
+            className="btn rounded-circle d-flex align-items-center justify-content-center"
             onClick={() => window.location.reload()}
             title="Перезагрузить страницу"
+            style={{ 
+              width: '60px', 
+              height: '60px', 
+              padding: '0',
+              fontSize: '1.8rem',
+              backgroundColor: '#4299e1',
+              borderColor: '#4299e1',
+              color: '#ffffff'
+            }}
           >
-            🔄
-          </button>
-          
-          {/* Кнопка настроек */}
-          <button
-            type="button"
-            className="btn btn-sm btn-outline-dark"
-            onClick={() => setShowSettingsModal(true)}
-            title="Настройки анализа плотности"
-          >
-            ⚙️
+            ↻
           </button>
         </div>
       </div>
@@ -304,7 +411,7 @@ export default function DensityPage() {
                       borderRadius: '4px',
                       fontSize: '1.1rem',
                       fontWeight: 'bold',
-                      color: '#0d6efd'
+                      color: `${watchedCoins[coin.id] ? watchedCoins[coin.id].value : '#0d6efd'} !important`
                     }}>
                       {coin.symbol}
                     </div>
@@ -337,15 +444,15 @@ export default function DensityPage() {
                                 <tbody>
                                   <tr>
                                     <td style={{ fontSize: '1.2rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">Стенка</td>
-                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">на цене:</td>
-                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">до цены:</td>
-                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">Съедание:</td>
-                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">время до:</td>
-                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">жизнь:</td>
-                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">Активность:</td>
+                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">На цене</td>
+                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">До цены</td>
+                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">Съедание</td>
+                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">Время до</td>
+                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">Жизнь</td>
+                                    <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-muted">Активность</td>
                                   </tr>
                                   <tr>
-                                    <td style={{ fontSize: '1.3rem', padding: '0', verticalAlign: 'middle' }} className="text-dark fw-bold">300т</td>
+                                    <td style={{ fontSize: '1.3rem', padding: '0', verticalAlign: 'middle' }} className="text-dark fw-bold">450т</td>
                                     <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-dark fw-bold">2000</td>
                                     <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="text-danger fw-bold">+2.5%</td>
                                     <td style={{ fontSize: '1.1rem', padding: '0', verticalAlign: 'middle' }} className="fw-bold">~12 мин</td>
@@ -370,7 +477,7 @@ export default function DensityPage() {
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="text-dark fw-bold">300т</td>
+                                    <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="text-dark fw-bold">450т</td>
                                     <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="text-dark fw-bold">2000</td>
                                     <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="text-danger fw-bold">+2.5%</td>
                                     <td style={{ padding: '0', textAlign: 'left', verticalAlign: 'middle', border: '1px solid #dee2e6' }} className="fw-bold">~12 мин</td>
@@ -443,7 +550,7 @@ export default function DensityPage() {
                             <button
                               key={tf.value}
                               type="button"
-                              className={`btn btn-sm ${getCoinInterval(coin.id) === tf.value ? 'btn-primary' : 'btn-outline-primary'}`}
+                              className={`btn ${getCoinInterval(coin.id) === tf.value ? 'btn-primary' : 'btn-outline-primary'}`}
                               onClick={() => setCoinInterval(coin.id, tf.value)}
                             >
                               {tf.label}
@@ -466,11 +573,14 @@ export default function DensityPage() {
                               borderColor: watchedCoins[coin.id] ? watchedCoins[coin.id].value : '#17a2b8',
                               borderWidth: watchedCoins[coin.id] ? '5px' : '2px',
                               backgroundColor: watchedCoins[coin.id] ? watchedCoins[coin.id].value : '',
-                              color: watchedCoins[coin.id] ? '#ffffff' : '',
-                              fontSize: '1.5rem'
+                              color: watchedCoins[coin.id] ? '#ffffff' : '#4299e1',
+                              fontSize: '0.45rem',
+                              fontWeight: 'bold',
+                              lineHeight: '1',
+                              textAlign: 'center'
                             }}
                           >
-                            👁
+                            {getTickerForButton(coin)}
                           </button>
                           
                           {/* Попап выбора цвета */}
@@ -550,7 +660,7 @@ export default function DensityPage() {
       {/* Модальное окно настроек */}
       {showSettingsModal && (
         <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)', overflowX: 'hidden' }}>
-          <div className="modal-dialog modal-dialog-scrollable" style={{ maxWidth: '95vw', width: '95vw', margin: '1rem auto', overflowX: 'hidden' }}>
+          <div className="modal-dialog modal-dialog-scrollable" style={{ maxWidth: '600px', width: '90%', margin: '1rem auto', overflowX: 'hidden' }}>
             <div className="modal-content" style={{ overflowX: 'hidden', maxWidth: '100%' }}>
               <div className="modal-header">
                 <h5 className="modal-title">Настройки анализа плотности</h5>
@@ -568,13 +678,14 @@ export default function DensityPage() {
                         <div className="d-flex flex-column flex-md-row gap-2">
                           <input 
                             type="text" 
-                            className="form-control flex-grow-1" 
+                            className="form-control form-control-lg flex-grow-1" 
                             placeholder="Введите имя настройки..."
                             value={presetName}
                             onChange={(e) => setPresetName(e.target.value)}
+                            style={{ fontSize: '1.2rem', padding: '0.75rem 1rem', minHeight: '50px' }}
                           />
                           <button 
-                            className="btn btn-outline-success flex-shrink-0 w-100 w-md-auto" 
+                            className="btn btn-outline-success btn-lg flex-shrink-0 w-100 w-md-auto" 
                             type="button"
                             onClick={savePreset}
                             style={{ maxWidth: '200px' }}
@@ -610,33 +721,33 @@ export default function DensityPage() {
                         <div className="row">
                           <div className="col-6">
                             <label className="form-label small">От</label>
-                            <input type="number" className="form-control" defaultValue="1" min="0" step="0.1" />
+                            <input type="number" className="form-control form-control-lg" defaultValue="1" min="0" step="0.1" style={{ fontSize: '1.2rem', padding: '0.75rem 1rem', minHeight: '50px' }} />
                           </div>
                           <div className="col-6">
                             <label className="form-label small">До</label>
-                            <input type="number" className="form-control" defaultValue="10" min="0" step="0.1" />
+                            <input type="number" className="form-control form-control-lg" defaultValue="10" min="0" step="0.1" style={{ fontSize: '1.2rem', padding: '0.75rem 1rem', minHeight: '50px' }} />
                           </div>
                         </div>
                       </div>
                       <div className="mb-3">
                         <label className="form-label">Минимальный объем (стенки)</label>
-                        <input type="number" className="form-control" defaultValue="1000" min="1000" step="1000" placeholder="от 1 тыс" />
+                        <input type="number" className="form-control form-control-lg" defaultValue="1000" min="1000" step="1000" placeholder="от 1 тыс" style={{ fontSize: '1.2rem', padding: '0.75rem 1rem', minHeight: '50px' }} />
                       </div>
                       
                       {/* Тип рынка */}
                       <div className="mb-3">
                         <label className="form-label">Тип рынка</label>
-                        <div>
+                        <div className="btn-group w-100" role="group">
                           <button
                             type="button"
-                            className={`btn ${isSpot ? 'btn-success' : 'btn-outline-success'} me-2`}
+                            className={`btn btn-lg ${isSpot ? 'btn-success' : 'btn-outline-success'}`}
                             onClick={() => setIsSpot(true)}
                           >
                             Спот
                           </button>
                           <button
                             type="button"
-                            className={`btn ${!isSpot ? 'btn-warning' : 'btn-outline-warning'}`}
+                            className={`btn btn-lg ${!isSpot ? 'btn-warning' : 'btn-outline-warning'}`}
                             onClick={() => setIsSpot(false)}
                           >
                             Фьючерсы
@@ -679,21 +790,22 @@ export default function DensityPage() {
                         <div className="col-sm-6">
                           <div className="mb-3">
                             <label className="form-label">Сигнал подход до цели за (%)</label>
-                            <input type="number" className="form-control" defaultValue="5" min="1" max="50" step="0.1" />
+                            <input type="number" className="form-control form-control-lg" defaultValue="5" min="1" max="50" step="0.1" style={{ fontSize: '1.2rem', padding: '0.75rem 1rem', minHeight: '50px' }} />
                           </div>
                           <div className="mb-3">
                             <label className="form-label">Исключение монет</label>
                             <div className="d-flex flex-column flex-md-row gap-2">
                               <input 
                                 type="text" 
-                                className="form-control flex-grow-1" 
+                                className="form-control form-control-lg flex-grow-1" 
                                 placeholder="Начните вводить название монeты..."
                                 list="coinsList"
                                 value={coinToExclude}
                                 onChange={(e) => setCoinToExclude(e.target.value)}
+                                style={{ fontSize: '1.2rem', padding: '0.75rem 1rem', minHeight: '50px' }}
                               />
                               <button 
-                                className="btn btn-outline-primary flex-shrink-0 w-100 w-md-auto" 
+                                className="btn btn-outline-primary btn-lg flex-shrink-0 w-100 w-md-auto" 
                                 type="button"
                                 onClick={addExcludedCoin}
                                 style={{ maxWidth: '200px' }}
@@ -747,14 +859,14 @@ export default function DensityPage() {
               <div className="modal-footer">
                 <button 
                   type="button" 
-                  className="btn btn-secondary" 
+                  className="btn btn-outline-secondary" 
                   onClick={() => setShowSettingsModal(false)}
                 >
                   Отмена
                 </button>
                 <button 
                   type="button" 
-                  className="btn btn-primary"
+                  className="btn btn-outline-dark"
                   onClick={() => {
                     // Сохраняем настройки и показываем попап
                     console.log('Настройки сохранены');
@@ -810,7 +922,7 @@ export default function DensityPage() {
               <div className="modal-footer">
                 <button 
                   type="button" 
-                  className="btn btn-secondary" 
+                  className="btn btn-outline-secondary" 
                   onClick={() => {
                     setShowDeleteConfirm(false);
                     setPresetToDelete(null);
@@ -820,7 +932,7 @@ export default function DensityPage() {
                 </button>
                 <button 
                   type="button" 
-                  className="btn btn-danger"
+                  className="btn btn-outline-danger"
                   onClick={deletePreset}
                 >
                   Да

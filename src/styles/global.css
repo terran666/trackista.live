@@ -54,7 +54,7 @@ html {
   margin-bottom: 20px;
 }
 
-.btn {
+.btn:not(.btn-outline-info) {
   background: #4299e1;
   color: white;
   border: none;
@@ -822,19 +822,19 @@ div[class*="col-"] .btn.rounded-pill,
   
   /* Прогресс-бары для планшетов */
   .density-page .progress {
-    height: 18px !important;
+    height: 24px !important;
   }
   
   .density-page .progress .progress-bar {
-    line-height: 18px !important;
-    font-size: 0.8rem !important;
+    line-height: 24px !important;
+    font-size: 0.9rem !important;
   }
 }
 
 /* Стили прогресс-баров для десктопа */
 @media (min-width: 769px) {
   .density-page .progress {
-    height: 20px !important;
+    height: 28px !important;
     margin-bottom: 4px !important;
     margin-top: 0 !important;
     background-color: #e9ecef !important;
@@ -844,8 +844,8 @@ div[class*="col-"] .btn.rounded-pill,
   
   .density-page .progress .progress-bar {
     height: 100% !important;
-    line-height: 20px !important;
-    font-size: 0.875rem !important;
+    line-height: 28px !important;
+    font-size: 1rem !important;
     transition: width 0.6s ease !important;
   }
 }
@@ -910,7 +910,7 @@ div[class*="col-"] .btn.rounded-pill,
   
   /* Прогресс-бары с отступами - МОБИЛЬНАЯ ВЕРСИЯ */
   .density-page .progress {
-    height: 16px !important;
+    height: 22px !important;
     margin-bottom: 6px !important; /* Увеличиваем отступ снизу */
     margin-top: 2px !important; /* Добавляем отступ сверху */
     width: 100% !important;
@@ -922,7 +922,7 @@ div[class*="col-"] .btn.rounded-pill,
   /* Стили для progress-bar внутри */
   .density-page .progress .progress-bar {
     height: 100% !important;
-    line-height: 16px !important; /* Выравнивание текста по центру */
+    line-height: 22px !important; /* Выравнивание текста по центру */
     font-size: 0.7rem !important;
     transition: width 0.6s ease !important;
   }
@@ -1176,6 +1176,30 @@ div[class*="col-"] .btn.rounded-pill,
 .screener1-page .rounded:not(.progress):not(.btn) {
   background-color: #ffffff !important;
   color: #212529 !important;
+}
+
+/* Кнопка слежения - размер шрифта управляется inline стилями */
+
+/* Большие кнопки меню */
+.density-page .btn.btn-lg {
+  font-size: 1rem !important;
+  padding: 0.5rem 1rem !important;
+  background-color: var(--bs-dark) !important;
+  border-color: var(--bs-dark) !important;
+  color: #ffffff !important;
+}
+
+/* Все кнопки на странице плотности, кроме кнопки слежения */
+.density-page .btn:not(.btn-close):not(.position-fixed .btn):not(.btn-outline-info) {
+  background-color: var(--bs-dark) !important;
+  border-color: var(--bs-dark) !important;
+  color: #ffffff !important;
+}
+
+/* Кнопки таймфрейма в группе - увеличиваем размер */
+.density-page .btn-group .btn {
+  font-size: 0.95rem !important;
+  padding: 0.4rem 0.8rem !important;
 }
 
 /* Специфичные правила для блоков анализа */
