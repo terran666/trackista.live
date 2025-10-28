@@ -1624,4 +1624,36 @@ div.analysis-block.rounded.p-3 {
     flex-shrink: 0 !important;
     min-width: auto !important;
   }
+  
+  /* Таймфреймы в блоке плотности - компактно в один ряд */
+  .density-page .btn-group[aria-label="Таймфреймы"] {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+    gap: 2px !important;
+  }
+  
+  /* Кнопки таймфреймов в блоке плотности */
+  .density-page .btn-group[aria-label="Таймфреймы"] .btn {
+    font-size: 0.7rem !important;
+    padding: 4px 6px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+    border-radius: 3px !important;
+  }
+  
+  /* Контейнер строки с таймфреймами */
+  .density-page .row.g-2.align-items-center.justify-content-between {
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  
+  /* Колонка с таймфреймами */
+  .density-page .col-12.col-md-auto {
+    padding: 0 !important;
+    margin-bottom: 8px !important;
+    width: 100% !important;
+  }
 }
