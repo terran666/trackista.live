@@ -521,7 +521,7 @@ export default function DensityPage() {
                             
                             <div className="progress" style={{ height: '20px', position: 'relative', margin: '0', marginTop: '1px' }}>
                               <div 
-                                className="progress-bar bg-success" 
+                                className="progress-bar bg-primary" 
                                 role="progressbar" 
                                 style={{ width: '72%' }}
                               >
