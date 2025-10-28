@@ -433,7 +433,7 @@ export default function DensityPage() {
 
 
                       {/* Блок данных по DOM стенке */}
-                      <div className="rounded" style={{ fontSize: '1.3rem', backgroundColor: '#ffffff', border: 'none', borderRadius: '0', boxShadow: 'none', margin: '0', padding: '0', fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
+                      <div className="rounded density-dom-block" style={{ backgroundColor: '#ffffff', border: 'none', borderRadius: '0', boxShadow: 'none', margin: '0', padding: '0', fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
                         <div className="row g-0">
 
                           

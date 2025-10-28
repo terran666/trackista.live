@@ -1708,3 +1708,14 @@ div.analysis-block.rounded.p-3 {
     font-size: 0.875rem !important;
   }
 }
+
+/* Отдельное правило для блока DOM анализа */
+.density-page .density-dom-block {
+  font-size: 1rem !important;
+}
+
+/* Принудительная установка размера шрифта для прогресс-баров независимо от родителя */
+.density-page .density-dom-block .progress .progress-bar span,
+.density-page .density-dom-block .progress span {
+  font-size: 0.875rem !important;
+}
