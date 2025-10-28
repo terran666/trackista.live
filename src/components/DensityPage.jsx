@@ -402,7 +402,7 @@ export default function DensityPage() {
                   {/* График сверху */}
                   <div className="density-chart-container position-relative" style={{ height: isCompactView ? '350px' : '450px', margin: 0, padding: 0, borderRadius: 0, border: 'none', boxShadow: 'none', outline: 'none' }}>
                     {/* Название тикера поверх графика */}
-                    <div className="position-absolute" style={{ 
+                    <div className="position-absolute d-none d-md-block" style={{ 
                       top: '10px', 
                       left: '15px', 
                       zIndex: 10,
