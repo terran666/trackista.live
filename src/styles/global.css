@@ -934,11 +934,13 @@ div[class*="col-"] .btn.rounded-pill,
     margin: 0 !important;
   }
   
-  /* Кнопки таймфреймов без боковых отступов */
+  /* Кнопки таймфреймов без боковых отступов - компактно в 1 ряд */
   .density-page .btn-group .btn {
-    font-size: 0.85rem !important;
-    padding: 6px 8px !important;
+    font-size: 0.7rem !important;
+    padding: 4px 6px !important;
     margin: 0 1px !important;
+    min-width: auto !important;
+    white-space: nowrap !important;
   }
   
   /* Контейнеры кнопок без боковых отступов */
@@ -1593,4 +1595,33 @@ div.analysis-block.rounded.p-3 {
 .screener1-page .btn:active {
   transform: none !important;
   box-shadow: inherit !important;
+}
+
+/* Мобильные стили для кнопки перезагрузки */
+@media (max-width: 576px) {
+  .density-page .btn.rounded-circle[title="Перезагрузить страницу"] {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 1.2rem !important;
+  }
+  
+  /* Выравнивание кнопок пресетов в ряд слева на мобильном */
+  .density-page .d-flex.gap-2.flex-wrap {
+    justify-content: flex-start !important;
+    align-items: center !important;
+    width: 100% !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 0.25rem !important;
+  }
+  
+  /* Кнопки пресетов компактно в ряд на мобильном */
+  .density-page .btn.btn-lg {
+    font-size: 0.75rem !important;
+    padding: 0.4rem 0.6rem !important;
+    margin-bottom: 0 !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+  }
 }
