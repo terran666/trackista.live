@@ -1715,7 +1715,20 @@ div.analysis-block.rounded.p-3 {
 }
 
 /* Принудительная установка размера шрифта для прогресс-баров независимо от родителя */
+.density-page .rounded.density-dom-block .progress .progress-bar span.text-white.fw-bold,
+.density-page .rounded.density-dom-block .progress span.text-muted.fw-bold {
+  font-size: 0.875rem !important;
+  line-height: 1.2 !important;
+}
+
+/* Дополнительное правило с максимальной специфичностью */
 .density-page .density-dom-block .progress .progress-bar span,
 .density-page .density-dom-block .progress span {
+  font-size: 0.875rem !important;
+}
+
+/* Правило с абсолютным приоритетом */
+div.density-page div.density-dom-block div.progress div.progress-bar span,
+div.density-page div.density-dom-block div.progress span {
   font-size: 0.875rem !important;
 }
