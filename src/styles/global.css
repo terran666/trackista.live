@@ -1687,3 +1687,24 @@ div.analysis-block.rounded.p-3 {
     -webkit-overflow-scrolling: touch !important;
   }
 }
+
+/* Принудительная установка размера шрифта для прогресс-баров */
+.density-page .progress .progress-bar span,
+.density-page .progress span {
+  font-size: 0.875rem !important;
+}
+
+/* Дополнительная специфичность для всех размеров экранов */
+@media (min-width: 769px) {
+  .density-page .progress .progress-bar span,
+  .density-page .progress span {
+    font-size: 0.875rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .density-page .progress .progress-bar span,
+  .density-page .progress span {
+    font-size: 0.875rem !important;
+  }
+}
