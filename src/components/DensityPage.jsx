@@ -514,9 +514,9 @@ export default function DensityPage() {
                                 role="progressbar" 
                                 style={{ width: '25%' }}
                               >
-                                <span className="text-white fw-bold" style={{ fontFamily: 'inherit', fontSize: '0.875rem' }}>25%</span>
+                                <span className="text-white fw-bold" style={{ fontFamily: 'inherit', fontSize: '0.875rem !important' }}>25%</span>
                               </div>
-                              <span className="text-muted fw-bold position-absolute" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)', fontFamily: 'inherit', fontSize: '0.875rem' }}>Vol: 2.4M</span>
+                              <span className="text-muted fw-bold position-absolute" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)', fontFamily: 'inherit', fontSize: '0.875rem !important' }}>Vol: 2.4M</span>
                             </div>
                             
                             <div className="progress" style={{ height: '20px', position: 'relative', margin: '0', marginTop: '1px', fontFamily: 'inherit' }}>
@@ -525,9 +525,9 @@ export default function DensityPage() {
                                 role="progressbar" 
                                 style={{ width: '72%' }}
                               >
-                                <span className="text-white fw-bold" style={{ fontFamily: 'inherit', fontSize: '0.875rem' }}>72%</span>
+                                <span className="text-white fw-bold" style={{ fontFamily: 'inherit', fontSize: '0.875rem !important' }}>72%</span>
                               </div>
-                              <span className="text-muted fw-bold position-absolute" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)', fontFamily: 'inherit', fontSize: '0.875rem' }}>Вероятность пробоя</span>
+                              <span className="text-muted fw-bold position-absolute" style={{ right: '8px', top: '50%', transform: 'translateY(-50%)', fontFamily: 'inherit', fontSize: '0.875rem !important' }}>Вероятность пробоя</span>
                             </div>
                             
 
