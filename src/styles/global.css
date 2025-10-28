@@ -1605,14 +1605,22 @@ div.analysis-block.rounded.p-3 {
     font-size: 1.2rem !important;
   }
   
+  /* Контейнер с пресетами и кнопкой перезагрузки на мобильном */
+  .density-page .d-flex.justify-content-between {
+    flex-direction: row !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+  
   /* Выравнивание кнопок пресетов в ряд слева на мобильном */
   .density-page .d-flex.gap-2.flex-wrap {
     justify-content: flex-start !important;
     align-items: center !important;
-    width: 100% !important;
+    flex: 1 !important;
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     gap: 0.25rem !important;
+    margin-right: 0.5rem !important;
   }
   
   /* Кнопки пресетов компактно в ряд на мобильном */
