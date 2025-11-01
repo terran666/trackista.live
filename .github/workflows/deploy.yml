@@ -3,8 +3,6 @@ name: Deploy to S3
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 permissions:
       id-token: write   # This is required for requesting the JWT
@@ -40,4 +38,5 @@ jobs:
     - name: Deploy to S3
       run: |
         aws s3 sync dist/ s3://trackista.live --delete
+
         aws s3 cp dist/index.html s3://trackista.live/index.html --cache-control "no-cache"
